@@ -2,14 +2,12 @@
   <header class="header">
     <div class="title">QUẢN LÝ MƯỢN SÁCH</div>
     <div class="actions">
-      <!-- <button v-if="isLoggedIn" class="btn logout" @click="logout">Đăng xuất</button>
-      <button v-else class="btn login" @click="gotoLogin">Đăng nhập</button> -->
+      <div v-if="isLoggedIn" >
+        <span class="username">Xin chào {{ username }} !!</span>      
+        <button class="btn logout" @click="logout">Đăng xuất</button>
 
-      <div v-if="isLoggedIn" class="dropdown">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-          {{ username }}
-        </button>
       </div>
+      <button v-else class="btn login" @click="gotoLogin">Đăng nhập</button>
     </div>
   </header>
 </template>
@@ -31,7 +29,11 @@ export default {
       window.location.reload(); // Tải lại trang đó
     },
     checkLoginStatus() {
-      this.isLoggedIn = !!localStorage.getItem("user"); // Kiểm tra trạng thái đăng nhập
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        this.isLoggedIn = true;
+        this.username = user.username; // Lấy tên người dùng từ localStorage
+      }
     }
   },
   mounted() {
@@ -57,7 +59,7 @@ export default {
 }
 
 .btn {
-  background: white;
+  background: #ccc;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
