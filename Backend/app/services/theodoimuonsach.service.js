@@ -36,9 +36,14 @@ class TheodoiMuonSachService {
   }
 
   async create(payload) {
-    const managementBook = await this.extractManagementBookData(payload); // Sử dụng await
+    const managementBook = await this.extractManagementBookData(payload); 
+    const sach = await this.sachService.findById(payload.masach);
 
     const result = await this.managementBook.insertOne(managementBook);
+    await this.sachService.update(payload.masach, {
+      soquyen: sach.soquyen - 1,
+      maNXB: sach.maNXB,
+    });
     return result;
   }
 
@@ -58,13 +63,13 @@ class TheodoiMuonSachService {
   }
 
   async update(id, payload) {
-    const filter = { 
-      madocgia: id 
-    }; 
+    const filter = {
+      madocgia: id,
+    };
 
     const updateData = {
-        $set: payload 
-    }; 
+      $set: payload,
+    };
 
     const res = await this.managementBook.updateMany(filter, updateData);
 
@@ -72,8 +77,18 @@ class TheodoiMuonSachService {
   }
 
   async delete(id) {
+    const doc = await this.managementBook.findOne({maMuon: id}); // tìm sách với id 
+
+    // xóa sách
     const result = await this.managementBook.findOneAndDelete({
       maMuon: id,
+    });
+
+    //cập nhật lại số quyển sách
+    const sach = await this.sachService.findById(doc.masach); // lấy thông tin sách từ id đã nhập vào
+    await this.sachService.update(doc.masach, {
+      soquyen: sach.soquyen + 1,
+      maNXB: sach.maNXB,
     });
     return result;
   }

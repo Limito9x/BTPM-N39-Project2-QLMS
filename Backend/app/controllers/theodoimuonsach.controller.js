@@ -46,33 +46,44 @@ exports.find = async (req, res, next) => {
 
     return res.send(doc);
   } catch (error) {
-    return next(new ApiError(500, `Lỗi khi lấy thẻ mượn sách với ID=${req.params.id} err= ${error}`));
+    return next(
+      new ApiError(
+        500,
+        `Lỗi khi lấy thẻ mượn sách với ID=${req.params.id} err= ${error}`
+      )
+    );
   }
 };
 
 // Cập nhật thông tin mượn sách theo madocgia
 exports.update = async (req, res, next) => {
-    const { id } = req.params; // Lấy ID từ URL
+  const { id } = req.params; // Lấy ID từ URL
 
-    const payload = req.body;
-    if (!Object.keys(payload).length) {
-        return next(new ApiError(400, "Dữ liệu cập nhật không được để trống"));
+  const payload = req.body;
+  if (!Object.keys(payload).length) {
+    return next(new ApiError(400, "Dữ liệu cập nhật không được để trống"));
+  }
+
+  try {
+    const theodoimuonsachService = new TheoDoiMuonSachService(MongoDB.client);
+    const result = await theodoimuonsachService.update(id, payload);
+
+    if (!result) {
+      return next(
+        new ApiError(404, `Không tìm thấy thẻ mượn sách với madocgia=${id}`)
+      );
     }
 
-    try {
-        const theodoimuonsachService = new TheoDoiMuonSachService(MongoDB.client);
-        const result = await theodoimuonsachService.update(id, payload);
-
-        if (!result) {
-            return next(new ApiError(404, `Không tìm thấy thẻ mượn sách với madocgia=${id}`));
-        }
-
-        return res.send({ message: "Cập nhật thành công", result });
-    } catch (error) {
-        return next(new ApiError(500, `Lỗi khi cập nhật thẻ mượn sách với madocgia=${id}, lỗi: ${error}`));
-    }
+    return res.send({ message: "Cập nhật thành công", result });
+  } catch (error) {
+    return next(
+      new ApiError(
+        500,
+        `Lỗi khi cập nhật thẻ mượn sách với madocgia=${id}, lỗi: ${error}`
+      )
+    );
+  }
 };
-
 
 // Xóa một cuốn sách theo ID
 exports.delete = async (req, res, next) => {
@@ -87,7 +98,7 @@ exports.delete = async (req, res, next) => {
     return res.send(doc);
   } catch (error) {
     return next(
-      new ApiError(500, `Lỗi khi xóa thẻ mượn sách ID=${req.params.id}`)
+      new ApiError(500, `Lỗi khi xóa thẻ mượn sách ID=${req.params.id} Err: ${error}`)
     );
   }
 };
