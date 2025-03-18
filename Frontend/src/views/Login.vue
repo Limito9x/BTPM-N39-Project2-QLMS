@@ -19,19 +19,14 @@
         <p v-if="madocgiaError" style="color: #fff; font-size: 13px;">{{ madocgiaError }}</p>
         <input v-model="registerData.holot" placeholder="Họ lót" required />
         <input v-model="registerData.ten" placeholder="Tên" required />
-        <input
-          v-model="registerData.ngaysinh"
-          type="text"
-          placeholder="Ngày sinh"
-          onfocus="(this.type='date')"
-          onblur="(this.type='text')"
-        />
+        <input v-model="registerData.ngaysinh" type="text" placeholder="Ngày sinh" onfocus="(this.type='date')"
+          onblur="(this.type='text')" />
         <select v-model="registerData.phai" placeholder="Giới tính">
           <option value="gt" disabled>Giới tính</option>
           <option value="Nam">Nam</option>
           <option value="Nữ">Nữ</option>
         </select>
-        <input v-model="registerData.diachi" placeholder="Địa chỉ"  />
+        <input v-model="registerData.diachi" placeholder="Địa chỉ" />
         <input v-model="registerData.dienthoai" placeholder="Số điện thoại" required />
         <input v-model="registerData.pass" type="password" placeholder="Mật khẩu" required />
         <input v-model="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required />
@@ -44,7 +39,6 @@
 <script>
 import readerService from "@/services/reader.service";
 import staffService from "@/services/staff.service";
-import { error } from "jquery";
 
 export default {
   data() {
@@ -103,12 +97,12 @@ export default {
         if (user && user.pass === this.loginData.password) {
           alert("Đăng nhập thành công với tư các Đọc Giả");
           this.$router.push("/");
-          localStorage.setItem("user", JSON.stringify({ id: user.madocgia, role: "reader" }));
+          localStorage.setItem("user", JSON.stringify({ id: user.madocgia, role: "reader", username: user.ten }));
           this.$router.push("/");
         }
         else if (staff && staff.password === this.loginData.password) {
           alert("Đăng nhập thành công với tư cách Nhân Viên!");
-          localStorage.setItem("user", JSON.stringify({ id: staff.msnv, role: "staff" }));
+          localStorage.setItem("user", JSON.stringify({ id: staff.msnv, role: "staff", username: staff.hotenNV }));
           this.$router.push("/admin/"); 
         }  
         else {
@@ -148,7 +142,8 @@ export default {
         console.error("Lỗi khi tạo tài khoản:", error);
         alert(`Có lỗi xảy ra, vui lòng thử lại. ${error}`);
       }
-    }
+    },
+    
   }
 };
 </script>

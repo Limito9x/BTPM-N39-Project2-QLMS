@@ -82,7 +82,7 @@ export default {
 },
   async editBook(book) { //[PUT]
   try {
-    const updatedBook = { ...book, tensach: updatedTitle }; 
+    // const updatedBook = { ...book, tensach: updatedTitle }; 
     const response = await borrowBookService.updateBorrowBook(book.maMuon,book);
 
     this.books = this.books.map(b => (b._id === book._id ? response.data : b));

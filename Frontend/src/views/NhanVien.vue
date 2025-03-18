@@ -8,42 +8,25 @@
           <h2>Danh Sách Nhân Viên</h2>
         </div>
         <button @click="showForm = true" class="add">Thêm Nhân viên</button>
-        <!-- Hiển thị form khi showForm = true -->
-        <FormAddStaff v-if="showForm"
-        @add-staff="create"
-        @close="showForm = false" />
 
-        <!-- Bảng danh sách độc giả -->
-        <table class="reader-table">
-          <thead>
-            <tr>
-              <th>Mã Số Nhân Viên</th>
-              <th>Họ Tên Nhân Viên</th>
-              <th>Chức Vụ</th>
-              <th>Địa Chỉ</th>
-              <th>Số Điện Thoại</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="staff in staffs" :key="staff.msnv">
-              <td>{{ staff.msnv }}</td>
-              <td>{{ staff.hotenNV }}</td>
-              <td>{{ staff.chucvu  }}</td>
-              <td>{{ staff.diachi }}</td>
-              <td>{{ staff.dienthoai }}</td>
-              <td>
-                <button @click="deleteStaff(staff.msnv)" class="delete">XÓA</button>
-                <button @click="openEditForm(staff)" class="edit">Chỉnh sửa</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <FormEditStaff 
-            v-if="showEditForm"
-            :staff="selectedStaff"
-            @edit-staff="editStaff" 
+        <FormAddStaff v-if="showForm" @add-staff="create" @close="showForm = false" />
+
+        <div class="staff-list">
+          <div class="staff-card" v-for="staff in staffs" :key="staff.msnv">
+            <h3>Tên nhân viên: {{ staff.hotenNV }}</h3>
+            <p><strong>Mã số/Tên tài khoản: </strong>{{ staff.msnv }}</p>
+            <p><strong>Chức vụ: </strong>{{ staff.chucvu }}</p>
+            <p><strong>Địa chỉ: </strong>{{ staff.diachi }}</p>
+            <p><strong>SĐT: </strong>{{ staff.dienthoai }}</p>
+            <p><strong>Mật khẩu: </strong>{{ staff.password }}</p>
+            <div class="actions">
+              <button @click="deleteStaff(staff.msnv)" class="delete">XÓA</button>
+              <button @click="openEditForm(staff)" class="edit">Chỉnh sửa</button>
+            </div>
+          </div>
+          <FormEditStaff v-if="showEditForm" :staff="selectedStaff" @edit-staff="editStaff"
             @close="showEditForm = false" />
+        </div>
       </div>
     </div>
   </div>
@@ -53,7 +36,6 @@
 import Navbar from "@/components/navbar.vue";
 import Header from "@/components/header.vue";
 import FormAddStaff from "@/components/formAddStaff.vue";
-import axios from "axios";
 import FormEditStaff from "@/components/formEditStaff.vue";
 import staffService from "@/services/staff.service";
 
@@ -130,6 +112,8 @@ export default {
 <style scoped>
 .wrapper {
   display: flex;
+  background: #f8f9fa;
+  min-height: 100vh;
 }
 
 .main-content {
@@ -138,66 +122,91 @@ export default {
 }
 
 .content {
-  background: #fff;
+  background: #ffffff;
   padding: 20px;
-  border-radius: 10px;
   margin-top: 70px;
+  border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-content {
-  margin-top: 20px
-}
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-}
-
-.reader-table {
-  width: 100%;
-  border-collapse: collapse;
+.staff-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
   margin-top: 20px;
 }
 
-.reader-table th, .reader-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+.staff-card {
+  background: #EEEEEE;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.staff-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.staff-card h3 {
   text-align: center;
+  text-transform: uppercase;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #000;
 }
 
-.reader-table th {
-  background-color: #f2f2f2;
+p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #555;
 }
 
-.delete {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
 }
 
 .edit {
-  background-color: green;
+  background-color: #007bff;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s;
 }
 
-.add{
+.edit:hover {
+  background-color: #0056b3;
+}
+
+.delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.delete:hover {
+  background-color: #c82333;
+}
+
+.add {
   background-color: blue;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
-}
-button {
-  margin-left: 5px;
 }
 </style>

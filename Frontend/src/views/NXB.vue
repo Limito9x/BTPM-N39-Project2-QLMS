@@ -10,32 +10,18 @@
         <button @click="showForm = true" class="add">Thêm Nhà Xuất Bản</button>
         <FormAddNXB v-if="showForm" @add-nxb="create" @close="showForm = false" />
 
-        <table class="nxb-table">
-          <thead>
-            <tr>
-              <th>Mã Nhà Xuất Bản</th>
-              <th>Tên Nhà Xuất Bản</th>
-              <th>Địa chỉ</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="nxb in nxbs" :key="nxb.maNXB">
-              <td>{{ nxb.maNXB }}</td>
-              <td>{{ nxb.tennxb }}</td>
-              <td>{{ nxb.diachi }}</td>
-              <td>
-                <button @click="deleteNXB(nxb.maNXB)" class="delete">XÓA</button>
-                <button @click="openEditForm(nxb)" class="edit">Chỉnh sửa</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <FormEditNXB
-            v-if="showEditForm"
-            :nxb="selectedNXB"
-            @edit-nxb="editNXB" 
-            @close="showEditForm = false" />
+        <div class="NXB-list">
+          <div class="NXB-card" v-for="nxb in nxbs" :key="nxb.maNXB">
+            <h3>Nhà xuất bản: {{ nxb.tennxb }}</h3>
+            <p><strong>Mã nhà xuất bản: </strong>{{ nxb.maNXB }}</p>
+            <p><strong>Địa chỉ: </strong>{{ nxb.diachi }}</p>
+            <div class="actions">
+              <button @click="deleteNXB(nxb.maNXB)" class="delete">XÓA</button>
+              <button @click="openEditForm(nxb)" class="edit">Chỉnh sửa</button>
+            </div>
+          </div>
+          <FormEditNXB v-if="showEditForm" :nxb="selectedNXB" @edit-nxb="editNXB" @close="showEditForm = false" />
+        </div>
       </div>
     </div>
   </div>
@@ -47,7 +33,6 @@ import Header from "@/components/header.vue";
 import FormAddNXB from "@/components/formAddNXB.vue"
 import FormEditNXB from "@/components/formEditNXB.vue";
 import nxbService from "@/services/nxb.service";
-import axios from "axios";
 
 export default {
   components: {
@@ -65,21 +50,21 @@ export default {
     };
   },
   methods: {
-    async fetchNXB() { 
+    async fetchNXB() {
       try {
-        const response = await nxbService.getAllNXB(); 
+        const response = await nxbService.getAllNXB();
         this.nxbs = response.data;
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sách:", error);
       }
     },
-    
-    async create(nxb) { 
+
+    async create(nxb) {
       try {
         await nxbService.createNXB(nxb);
 
         //  kiểm tra thêm NXB đã tồn tại chưa
-        
+
         await this.fetchNXB(); // Cập nhật danh sách sau khi thêm thành công
         this.showForm = false; // Ẩn form sau khi lưu
         console.log("Thêm độc giả thành công!");
@@ -97,18 +82,18 @@ export default {
       } catch (error) {
         console.error("Lỗi khi xóa độc giả:", error);
       }
-    }, 
+    },
 
     openEditForm(nxb) {
-      this.selectedNXB = { ...nxb};  
+      this.selectedNXB = { ...nxb };
       console.log("NXB được chọn để chỉnh sửa:", this.selectedNXB);
       this.showEditForm = true;
     },
 
-    async editNXB(updateNXB) {  
+    async editNXB(updateNXB) {
       try {
         console.log(updateNXB.maNXB);
-        await nxbService.updateNXB(updateNXB.maNXB,updateNXB);
+        await nxbService.updateNXB(updateNXB.maNXB, updateNXB);
         await this.fetchNXB();
         this.showEditForm = false;
         console.log("Cập nhật sách thành công!");
@@ -126,6 +111,8 @@ export default {
 <style scoped>
 .wrapper {
   display: flex;
+  background: #f8f9fa;
+  min-height: 100vh;
 }
 
 .main-content {
@@ -134,66 +121,106 @@ export default {
 }
 
 .content {
-  background: #fff;
+  background: #ffffff;
   padding: 20px;
-  border-radius: 10px;
   margin-top: 70px;
+  border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-content {
-  margin-top: 20px
-}
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-}
-
-.nxb-table {
-  width: 100%;
-  border-collapse: collapse;
+.NXB-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
   margin-top: 20px;
 }
 
-.nxb-table th, .nxb-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+.NXB-card {
+  background: #EEEEEE;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.NXB-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.NXB-card h3 {
   text-align: center;
+  text-transform: uppercase;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #000;
 }
 
-.nxb-table th {
-  background-color: #f2f2f2;
+p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #555;
 }
 
-.delete {
-  background-color: red;
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.borrow {
+  background-color: #28a745;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.borrow:hover {
+  background-color: #218838;
 }
 
 .edit {
-  background-color: green;
+  background-color: #007bff;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s;
 }
 
-.add{
+.edit:hover {
+  background-color: #0056b3;
+}
+
+.delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.delete:hover {
+  background-color: #c82333;
+}
+
+.add {
   background-color: blue;
   color: white;
   border: none;
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 5px;
-}
-button {
-  margin-left: 5px;
 }
 </style>

@@ -152,10 +152,6 @@ export default {
     transition: transform 0.2s ease-in-out;
   }
 
-  .reader-card:hover {
-    transform: translateY(-5px);
-  }
-
   .reader-card p {
     font-size: 16px;
     color: #333;

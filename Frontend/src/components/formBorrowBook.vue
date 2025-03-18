@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import borrowBookService from "@/services/borrowBook.service";
 
 export default {
@@ -69,9 +68,11 @@ export default {
       try {
         await borrowBookService.createBorrowBook(this.borrowBook);
         alert("Mượn sách thành công!");
+        // borrowBookService.getAllBorrowBook();
+        window.location.reload();
         this.$emit("close"); // Đóng form
       } catch (error) {
-        console.error("Lỗi khi mượn sách:", error);
+        console.error(` lỗi khi mượn sách ${error}`);
       }
     }
   }
