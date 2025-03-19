@@ -17,7 +17,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
-// Lấy danh NXB
+// Lấy danh sách NXB
 exports.findAll = async (req, res, next) => {
   try {
     const nxbService = new NXBService(MongoDB.client);
@@ -34,7 +34,7 @@ exports.findAll = async (req, res, next) => {
   }
 };
 
-// Lấy thông NXB
+// tìm NXB theo maNXB 
 exports.findOne = async (req, res, next) => {
   try {
     const nxbService = new NXBService(MongoDB.client);

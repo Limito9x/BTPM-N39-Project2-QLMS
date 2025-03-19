@@ -11,7 +11,7 @@
           <div class="book-card" v-for="book in books" :key="book.masach">
             <h3>{{ book.tensach }}</h3>
             <p><strong>Mã Sách:</strong> {{ book.masach }}</p>
-            <p><strong>Đơn Giá:</strong> {{ book.dongia }}</p>
+            <p><strong>Đơn Giá:</strong> {{ book.dongia }} VND</p>
 
             <div class="book-quantity">
               <p><strong>Số Quyển:</strong></p>

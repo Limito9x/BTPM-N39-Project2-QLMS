@@ -16,7 +16,7 @@
           <div class="book-card" v-for="book in books" :key="book.masach">
             <h3>{{ book.tensach }}</h3>
             <p><strong>Mã Sách:</strong> {{ book.masach }}</p>
-            <p><strong>Đơn Giá:</strong> {{ book.dongia }}</p>
+            <p><strong>Đơn Giá:</strong> {{ book.dongia }} VND</p>
             <p><strong>Số Quyển:</strong> {{ book.soquyen }}</p>
             <p><strong>Năm Xuất Bản:</strong> {{ book.namsanxuat }}</p>
             <p><strong>Mã Nhà Xuất Bản:</strong> {{ book.maNXB }}</p>
@@ -72,27 +72,28 @@ export default {
     },
     async create(book) {  // [POST]
       try {
-        book.soquyen = parseInt(book.soquyen);
+        book.soquyen = parseInt(book.soquyen); // chuyển sang kiểu số
+        // kiểm tra sách có tồn tài chưa
         await bookService.createBook(book);
         await this.fetchBooks(); // Cập nhật danh sách sau khi thêm thành công
         this.showForm = false; // Ẩn form sau khi lưu
-        console.log("Thêm sách thành công!");
+        alert("Thêm sách thành công!");
       } catch (error) {
         console.error("Lỗi khi thêm sách:", error);
       }
     },
-    async deleteBook(id) { // [DELETE]
+    async deleteBook(id) { 
       if (!confirm("Bạn có chắc chắn muốn xóa sách này?")) return;
       try {
         await bookService.deleteBook(id);
         this.books = this.books.filter(book => book._id !== id);
-        console.log("Xóa sách thành công!");
+        alert("Xóa sách thành công!");
       } catch (error) {
         console.error("Lỗi khi xóa sách:", error);
       }
     },
     openEditForm(book) {
-      this.selectedBook = { ...book };  // Copy object để tránh ảnh hưởng trực tiếp
+      this.selectedBook = { ...book };  
       this.showEditForm = true;
     },
     async editBook(updatedBook) {  
@@ -100,7 +101,7 @@ export default {
         await bookService.updateBook(updatedBook.masach,updatedBook);
         await this.fetchBooks();
         this.showEditForm = false;
-        console.log("Cập nhật sách thành công!");
+        alert("Cập nhật sách thành công!");
       } catch (error) {
           console.error("Lỗi khi cập nhật sách:", error);
       }
@@ -135,7 +136,7 @@ export default {
 
 .book-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }

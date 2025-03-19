@@ -2,12 +2,12 @@ const { ObjectId } = require("mongodb");
 
 class nhanVienService {
   constructor(client) {
-    this.NhanVien = client.db().collection("nhanvien"); // Đổi collection thành "readers"
+    this.NhanVien = client.db().collection("nhanvien"); 
   }
 
   extractNhanVienData(payload) {
     const nhanvien = {
-      msnv: payload.msnv, // lấy id tự động
+      msnv: payload.msnv, 
       hotenNV: payload.hotenNV,
       password: payload.password,
       chucvu: payload.chucvu,

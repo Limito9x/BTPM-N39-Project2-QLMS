@@ -2,7 +2,7 @@ const DocGiaService = require("../services/docgia.service");
 const MongoDB = require("../utils/mongodb.util");
 const ApiError = require("../api-error");
 
-// Thêm mới độc giả
+// Thêm mới đọc giả
 exports.create = async (req, res, next) => {
   
   if (!req.body?.ten) {
@@ -18,7 +18,7 @@ exports.create = async (req, res, next) => {
   }
 };
 
-// Lấy danh sách độc giả tìm theo tên
+// Lấy danh sách đọc giả tìm theo tên
 exports.findAll = async (req, res, next) => {
   try {
     const docGiaService = new DocGiaService(MongoDB.client);
@@ -33,7 +33,7 @@ exports.findAll = async (req, res, next) => {
   }
 };
 
-// Lấy thông tin một độc giả theo ID
+// Lấy thông tin một đoc giả theo ID
 exports.find = async (req, res, next) => {
   try {
     const docGiaService = new DocGiaService(MongoDB.client);
@@ -51,7 +51,7 @@ exports.find = async (req, res, next) => {
   }
 };
 
-// Cập nhật thông tin độc giả
+// Cập nhật thông tin đọc giả
 exports.update = async (req, res, next) => {
   const { id } = req.params;
   const payload = req.body;
@@ -74,7 +74,7 @@ exports.update = async (req, res, next) => {
   }
 };
 
-// Xóa một độc giả theo ID
+// Xóa một đọc giả theo ID
 exports.delete = async (req, res, next) => {
   try {
     const docGiaService = new DocGiaService(MongoDB.client);
@@ -92,7 +92,7 @@ exports.delete = async (req, res, next) => {
   }
 };
 
-// Xóa tất cả độc giả
+// Xóa tất cả đoc giả
 exports.deleteAll = async (req, res, next) => {
   try {
     const docGiaService = new DocGiaService(MongoDB.client);

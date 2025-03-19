@@ -5,6 +5,7 @@ class ReaderService {
     this.Reader = client.db().collection("readers");
   }
 
+  // dữ liệu đầu vào
   extractReaderData(payload) {
     const reader = {
       madocgia: payload.madocgia,
@@ -24,6 +25,7 @@ class ReaderService {
     return reader;
   }
 
+  // tạo sách
   async create(payload) {
     const Reader = this.extractReaderData(payload);
     // Kiểm tra đã tồn tại chưa
@@ -39,21 +41,25 @@ class ReaderService {
     return result;
   }
 
+  // tìm kiếm 
   async find(filter) {
     const cursor = await this.Reader.find(filter);
     return await cursor.toArray();
   }
 
+  // tìm theo tên
   async findByName(name) {
     return await this.find({
       ten: { $regex: new RegExp(name), $options: "i" },
     });
   }
 
+  // timg theo ID
   async findByIdUser(id) {
-    return await this.Reader.find({ madocgia: id }).toArray();
+    return await this.Reader.findOne({ madocgia: id })
   }
 
+  // cập nhật
   async update(id, payload) {
     const filter = {
       madocgia: id,
@@ -67,6 +73,7 @@ class ReaderService {
     return res;
   }
 
+  // xóa một 
   async delete(id) {
     const result = await this.Reader.findOneAndDelete({
       madocgia: id,
@@ -74,6 +81,7 @@ class ReaderService {
     return result;
   }
 
+  // xóa nhiều
   async deleteAll() {
     const result = await this.Reader.deleteMany({});
     return result.deletedCount;

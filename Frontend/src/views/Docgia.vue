@@ -55,25 +55,24 @@ export default {
       }
     },
     
-    async create(reader) { 
-      try {
-        await readerService.createReader(reader);
-        await this.fetchReaders(); // Cập nhật lại sau khi thêm
-        this.showForm = false; // Ẩn form sau khi lưu
-        console.log("Thêm độc giả thành công!");
-      } catch (error) {
-        console.error("Lỗi khi thêm độc giả:", error);
-      }
-    },
+    // async create(reader) { 
+    //   try {
+    //     await readerService.createReader(reader);
+    //     await this.fetchReaders(); // Cập nhật lại sau khi thêm
+    //     this.showForm = false; // Ẩn form sau khi lưu
+    //   } catch (error) {
+    //     console.error("Lỗi khi thêm đọc giả:", error);
+    //   }
+    // },
 
     async deleteReader(id) {
-      if (!confirm("Bạn có chắc chắn muốn xóa độc giả này?")) return;
+      if (!confirm("Bạn có chắc chắn muốn xóa đọc giả này?")) return;
       try {
         await readerService.deleteDocGia(id);
         await this.fetchReaders(); // cập nhật lại
-        console.log("Xóa độc giả thành công!");
+        // console.log("Xóa đọc giả thành công!");
       } catch (error) {
-        console.error("Lỗi khi xóa độc giả:", error);
+        console.error("Lỗi khi xóa đọc giả:", error);
       }
     }
   },

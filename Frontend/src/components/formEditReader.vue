@@ -48,12 +48,9 @@ export default {
   methods: {
     submitForm() {
         this.$emit("editUser", this.editUser); 
-        this.resetForm();
+        this.editUser = { madocgia: "", pass: "", holot: "", ten: "", ngaysinh: "", phai: "", diachi: "", dienthoai: "" };
+        this.errorMessage = "";
     },
-    resetForm() {
-      this.editUser = { madocgia: "", pass: "", holot: "", ten: "", ngaysinh: "", phai: "", diachi:"", dienthoai: ""};
-      this.errorMessage = "";
-    }
   },
     watch: {
     reader(newUser) {

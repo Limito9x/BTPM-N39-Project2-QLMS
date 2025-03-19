@@ -15,8 +15,8 @@
 
       <!-- Form Đăng Ký -->
       <form v-else @submit.prevent="register">
-        <input v-model="registerData.madocgia" @input="checkMadocgia" placeholder="Tên đăng nhập" required />
-        <p v-if="madocgiaError" style="color: #fff; font-size: 13px;">{{ madocgiaError }}</p>
+        <input v-model="registerData.madocgia" @blur="checkMadocgia" placeholder="Tên đăng nhập" required />
+        <p v-if="madocgiaError" style="color: #fff; font-size: 16px;">{{ madocgiaError }}</p>
         <input v-model="registerData.holot" placeholder="Họ lót" required />
         <input v-model="registerData.ten" placeholder="Tên" required />
         <input v-model="registerData.ngaysinh" type="text" placeholder="Ngày sinh" onfocus="(this.type='date')"
@@ -59,27 +59,29 @@ export default {
         madocgia: "",
       },
       confirmPassword: "",
-      madocgiaError:""
+      madocgiaError: ""
     };
   },
   methods: {
     async checkMadocgia() {
-      if (!this.registerData.madocgia){
-        this.madocgiaError=""
+      if (!this.registerData.madocgia) {
+        this.madocgiaError = ""
         return;
       }
 
       try {
-        const readerRes = await readerService.getAllReader();
-        const madocgiaList = readerRes.data.map(reader => reader.madocgia);
-        if (madocgiaList.includes(this.registerData.madocgia)) {
-          this.madocgiaError = "Tên đăng nhập đã tồn tại!"
-        } else {
-          this.madocgiaError="";
+        console.log(this.registerData.madocgia)
+        const response = await readerService.getByIdUser(this.registerData.madocgia);
+        // const madocgiaList = readerRes.data.map(reader => reader.madocgia);
+        if (response.data) {
+          this.madocgiaError = "Tên tài khoản đã tồn tại"
+        }
+        else {
+          this.madocgiaError = "";
         }
       }
       catch (error) {
-        console.error("Lỗi")
+        this.madocgiaError = "";
       }
     },
 
@@ -103,47 +105,45 @@ export default {
         else if (staff && staff.password === this.loginData.password) {
           alert("Đăng nhập thành công với tư cách Nhân Viên!");
           localStorage.setItem("user", JSON.stringify({ id: staff.msnv, role: "staff", username: staff.hotenNV }));
-          this.$router.push("/admin/"); 
-        }  
+          this.$router.push("/admin/");
+        }
         else {
           alert("Sai tên đăng nhập hoặc mật khẩu!");
         }
-      } 
+      }
       catch (error) {
-        console.error("Lỗi khi đăng nhập",error);
+        console.error("Lỗi khi đăng nhập", error);
       }
     },
 
     async register() {
       try {
-      //  kiểm tra thêm tendangnhap đã tồn tại chưa
-      // const readerRes = await readerService.getAllReader();
-      // console.log(readerRes);
+        //  kiểm tra thêm tendangnhap đã tồn tại chưa
+        // const readerRes = await readerService.getAllReader();
+        // console.log(readerRes);
 
-      // const madocgiaList = readerRes.data.map(reader => reader.madocgia);
-      // console.log("Danh sách mã độc giả:", madocgiaList);
-      if (this.madocgiaError){
-        alert("Chọn tên khác");
-        return;
-      }
-      //  Mật khẩu từ 5 số trở lên
+        // const madocgiaList = readerRes.data.map(reader => reader.madocgia);
+        // console.log("Danh sách mã độc giả:", madocgiaList);
+        await this.checkMadocgia();
+        if (this.madocgiaError) return
+        //  Mật khẩu từ 5 số trở lên
 
-      // kiểm tra mật khẩu trùng khớp
-      if (this.registerData.pass !== this.confirmPassword) {
-        alert("Mật khẩu không trùng khớp!");
-        return;
-      }
-      
-      await readerService.createReader(this.registerData);
+        // kiểm tra mật khẩu trùng khớp
+        if (this.registerData.pass !== this.confirmPassword) {
+          alert("Mật khẩu không trùng khớp!");
+          return;
+        }
 
-      alert("Đăng ký thành công! Hãy đăng nhập.");
-      this.isLogin = true; // Chuyển về trang đăng nhập
+        await readerService.createReader(this.registerData);
+
+        alert("Đăng ký thành công! Hãy đăng nhập.");
+        this.isLogin = true; // Chuyển về trang đăng nhập
       } catch (error) {
         console.error("Lỗi khi tạo tài khoản:", error);
         alert(`Có lỗi xảy ra, vui lòng thử lại. ${error}`);
       }
     },
-    
+
   }
 };
 </script>
@@ -182,7 +182,8 @@ export default {
   border-bottom: 2px solid white;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 10px;
   margin: 5px 0;

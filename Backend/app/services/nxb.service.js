@@ -7,7 +7,7 @@ class NXBService {
 
   extractNXBData(payload) {
     const nxb = {
-      maNXB: payload.maNXB, // lấy id tự động
+      maNXB: payload.maNXB, 
       tennxb: payload.tennxb,
       diachi: payload.diachi,
     };

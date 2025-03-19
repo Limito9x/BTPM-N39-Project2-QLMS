@@ -20,7 +20,7 @@
             </label>
             <div class="actions">
               <button @click="deleteBorrowBook(borrowbook.maMuon)" class="delete">XÓA</button>
-              <button @click="openEditForm(borrowbook)" class="edit">Chỉnh sửa</button>
+              <!-- <button @click="openEditForm(borrowbook)" class="edit">Chỉnh sửa</button> -->
             </div>
           </div>
           <FormEditBorrow v-if="showEditForm" :borrowbook="selectedBorrowBook" @edit-borrowBook="editBorrowBook"
@@ -36,7 +36,7 @@ import Header from "@/components/header.vue";
 import FormAddBook from "@/components/formAddBook.vue";
 import FormEditBorrow from "@/components/formEditBorrow.vue";
 import borrowBookService from "@/services/borrowBook.service";
-import { data } from "jquery";
+import bookService from "@/services/book.service";
 
 export default {
   components: {
@@ -63,11 +63,11 @@ export default {
       }
     },
     async deleteBorrowBook(id) { // [DELETE]
-      if (!confirm("Bạn có chắc chắn muốn xóa dòng này?")) return;
+      if (!confirm("Bạn có chắc chắn muốn xóa thẻ mượn sách này?")) return;
       try {
         await borrowBookService.deleteBorrowBook(id);
         this.fetchBorrowbooks();
-        console.log("Xóa thành công!");
+        alert("Xóa thẻ mượn sách thành công!");
       } catch (error) {
         console.error("Lỗi khi xóa :", error);
       }
@@ -77,24 +77,22 @@ export default {
       this.showEditForm = true; // Hiển thị form chỉnh sửa
     },
 
-    async editBorrowBook(updatedBook) {
-      try {
-        await borrowBookService.updateBorrowBook(updatedBook.maMuon, updatedBook);
-        this.borrowbooks = this.borrowbooks.map(book =>
-          book.maMuon === updatedBook.maMuon ? updatedBook : book
-        );
-        this.showEditForm = false; // Đóng form sau khi cập nhật
-        console.log("Chỉnh sửa thành công!", updatedBook);
-      } catch (error) {
-        console.error("Lỗi khi chỉnh sửa:", error);
-      }
-    },
-
     async changeStatus(borrowBook) {
       try {
         await borrowBookService.updateBorrowBook(borrowBook.maMuon, {
           datra: borrowBook.datra,
+          ngaytra: borrowBook.datra ? new Date().toISOString().split("T")[0]: null,
+        });
+
+        const dataBook = await bookService.getBookByID(borrowBook.masach);
+        console.log(dataBook.data.soquyen);
+        await bookService.updateBook(borrowBook.masach, {
+          maNXB: dataBook.data.maNXB,
+          soquyen: dataBook.data.soquyen + 1,
+          
         })
+        alert("Cập nhật thành công")
+
       }
       catch (error) {
         console.log(` Lỗi khi cập nhật ${error}`)

@@ -55,7 +55,7 @@ export default {
         const response = await nxbService.getAllNXB();
         this.nxbs = response.data;
       } catch (error) {
-        console.error("Lỗi khi lấy danh sách sách:", error);
+        console.error("Lỗi khi lấy danh sách sách NXB:", error);
       }
     },
 
@@ -67,26 +67,26 @@ export default {
 
         await this.fetchNXB(); // Cập nhật danh sách sau khi thêm thành công
         this.showForm = false; // Ẩn form sau khi lưu
-        console.log("Thêm độc giả thành công!");
+        alert("Thêm nhà xuất bản thành công!");
       } catch (error) {
-        console.error("Lỗi khi thêm độc giả:", error);
+        console.error("Lỗi khi thêm nhà xuất bản:", error);
       }
     },
 
     async deleteNXB(id) {
-      if (!confirm("Bạn có chắc chắn muốn xóa độc giả này?")) return;
+      if (!confirm("Bạn có chắc chắn muốn xóa nhà xuất bản này?")) return;
       try {
         await nxbService.deleteNXB(id);
         await this.fetchNXB();
-        console.log("Xóa độc giả thành công!");
+        alert("Xóa nhà xuất bản thành công!");
       } catch (error) {
-        console.error("Lỗi khi xóa độc giả:", error);
+        console.error("Lỗi khi xóa nhà xuất bản:", error);
       }
     },
 
     openEditForm(nxb) {
       this.selectedNXB = { ...nxb };
-      console.log("NXB được chọn để chỉnh sửa:", this.selectedNXB);
+      // console.log("NXB được chọn để chỉnh sửa:", this.selectedNXB);
       this.showEditForm = true;
     },
 
@@ -96,9 +96,9 @@ export default {
         await nxbService.updateNXB(updateNXB.maNXB, updateNXB);
         await this.fetchNXB();
         this.showEditForm = false;
-        console.log("Cập nhật sách thành công!");
+        alert("Cập nhật nhã xuất bản thành công!");
       } catch (error) {
-        console.error("Lỗi khi cập nhật sách:", error);
+        console.error("Lỗi khi cập nhật nhà xuất bản:", error);
       }
     }
   },

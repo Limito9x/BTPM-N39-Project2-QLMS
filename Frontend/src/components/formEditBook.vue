@@ -65,9 +65,6 @@ export default {
       if (this.errorMessage) return; // Nếu có lỗi thì không gửi form
 
       this.$emit("edit-book", this.editedBook);
-      this.resetForm();
-    },
-    resetForm() {
       this.editedBook = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
       this.errorMessage = "";
     },

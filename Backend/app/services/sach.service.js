@@ -27,7 +27,6 @@ class SachService {
       nguongoc_tacgia: payload.nguongoc_tacgia,
     };
 
-    // Xóa các trường undefined
     Object.keys(book).forEach(
       (key) => book[key] === undefined && delete book[key]
     );
@@ -36,7 +35,8 @@ class SachService {
   }
 
   async create(payload) {
-    const book = await this.extractBookData(payload); // Đảm bảo maNXB hợp lệ
+    const book = await this.extractBookData(payload); 
+    // kiểm tra
     const existBook = await this.book.findOne({ masach: book.masach });
 
     if (existBook) {

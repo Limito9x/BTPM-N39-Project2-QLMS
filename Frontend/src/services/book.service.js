@@ -4,6 +4,10 @@ export default {
   getAllBook() {
     return createAPI.get("/sach");
   },
+  
+  getBookByID(id) {
+    return createAPI.get(`/sach/${id}`);
+  },
 
   createBook(bookData) {
     return createAPI.post("/sach", bookData);

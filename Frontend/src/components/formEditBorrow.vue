@@ -31,13 +31,10 @@ export default {
     },
     methods: {
         submitForm() {
-            this.$emit("edit-borrowBook", this.editedBorrowBook); // truyền ra cha
-            this.resetForm();
-        },
-        resetForm() {
-            this.editNXB = { madocgia: "", masach: "", ngaytra: "", ngaymuon: "" };
+            this.$emit("edit-borrowBook", this.editedBorrowBook);
+            this.editedBorrowBook = { madocgia: "", masach: "", ngaytra: "", ngaymuon: "" };
             this.errorMessage = "";
-        }
+        },
     },
     watch: {
         borrowbook(newBorrowBook) {

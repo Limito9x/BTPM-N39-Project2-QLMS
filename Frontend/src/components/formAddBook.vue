@@ -1,38 +1,41 @@
 <template>
-  <div class="form-overlay"> 
+  <div class="form-overlay">
     <div class="form-container">
       <h3>Thêm Sách</h3>
       <label for="masach">Mã sách</label>
-      <input id="masach" v-model="book.masach"/>  
+      <input id="masach" v-model="book.masach " @blur="validateMasach" />
+      <p v-if="errorBook" style="color: red;">{{ errorBook }}</p>
+
 
       <label for="tensach">Tên sách</label>
-      <input id="tensach" v-model="book.tensach"/>
+      <input id="tensach" v-model="book.tensach" />
 
       <label for="dongia">Đơn giá</label>
-      <input id="dongia" v-model="book.dongia"/>
-      
+      <input id="dongia" v-model="book.dongia" />
+
       <label for="soquyen">Số quyển</label>
-      <input id="soquyen" v-model="book.soquyen"/>
+      <input id="soquyen" v-model="book.soquyen" />
 
       <label for="namsanxuat">Năm sản xuất</label>
-      <input id="namsanxuat" v-model="book.namsanxuat" type="date"/>
+      <input id="namsanxuat" v-model="book.namsanxuat" type="date" />
 
       <label for="maMXB">Mã nhà xuất bản</label>
-      <input id="maMXB" v-model="book.maNXB" @blur="validateMaNXB"/>
-      <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+      <input id="maMXB" v-model="book.maNXB" @blur="validateMaNXB" />
+      <p v-if="errorNXB" style="color: red;">{{ errorNXB }}</p>
 
       <label for="nguongoc">Nguồn gốc/Tác giả</label>
-      <input id="nguongoc" v-model="book.nguongoc_tacgia"/>
+      <input id="nguongoc" v-model="book.nguongoc_tacgia" />
 
-      <button @click="submitForm" class="submit">Lưu</button>
+      <button @click="addBook" class="submit">Lưu</button>
       <button @click="$emit('close')" class="cancel">Hủy</button>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import bookService from "@/services/book.service";
 import nxbService from "@/services/nxb.service";
+import { error } from "jquery";
 
 export default {
   data() {
@@ -47,7 +50,8 @@ export default {
         nguongoc_tacgia: "",
       },
       maNXBList: [], // Lưu danh sách mã nhà xuất bản từ DB
-      errorMessage: "", // Lưu lỗi nếu nhập sai mã NXB
+      errorNXB: "", // Lưu lỗi nếu nhập sai mã NXB
+      errorBook: "",
     };
   },
   methods: {
@@ -61,32 +65,45 @@ export default {
     },
     validateMaNXB() {
       if (!this.maNXBList.includes(this.book.maNXB)) {
-        this.errorMessage = "Mã NXB không tồn tại trong hệ thống!";
+        this.errorNXB = "Mã NXB không tồn tại !";
       } else {
         this.errorMessage = "";
       }
     },
-    submitForm() {
+    async validateMasach() {
+      try {
+        const response = await bookService.getBookByID(this.book.masach);
+        if (response.data){
+          this.errorBook = "Mã sách này đã tồn tại !"
+        }
+        else {
+          this.errorBook = ""
+        }
+      }
+      catch (error) {
+        this.errorBook = "";
+      }
+    },
+    async addBook() {
       this.validateMaNXB(); // Kiểm tra mã NXB trước khi gửi form
-      if (this.errorMessage) return; // Nếu có lỗi thì không gửi form
+      if (this.errorNXB) return; // Nếu có lỗi thì không gửi form
+
+      await this.validateMasach();
+      if (this.errorBook) return
 
       this.$emit("add-book", this.book);
-      this.resetForm();
-    },
-    resetForm() {
       this.book = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
-      this.errorMessage = "";
-    }
+      this.errorNXB = "";
+    },
   },
   mounted() {
-    this.fetchNXB(); // Lấy danh sách mã NXB khi component được mount
+    this.fetchNXB();
   }
 };
 </script>
 
 
 <style scoped>
-
 .form-overlay {
   position: fixed;
   top: 0;
@@ -115,7 +132,8 @@ label {
   margin: 10px 0px 0px 0px;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   margin: 2px 0 0 0;
   padding: 8px;
@@ -137,7 +155,7 @@ button {
 }
 
 .submit {
-background-color: green;
+  background-color: green;
   color: white;
 }
 </style>

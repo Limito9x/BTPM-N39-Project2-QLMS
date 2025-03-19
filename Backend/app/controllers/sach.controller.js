@@ -5,7 +5,7 @@ const ApiError = require("../api-error");
 // Thêm sach mới
 exports.create = async (req, res, next) => {
   if (!req.body?.masach) {
-    return next(new ApiError(400, "Tên không được để trống"));
+    return next(new ApiError(400, "mã sách không được để trống"));
   }
 
   try {

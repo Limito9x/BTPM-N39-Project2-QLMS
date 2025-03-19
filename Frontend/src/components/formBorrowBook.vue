@@ -15,10 +15,10 @@
             <label>Ngày Mượn:</label>
             <input v-model="borrowBook.ngaymuon" type="date" />
         </div>
-        <div>
+        <!-- <div>
             <label>Ngày Trả</label>
             <input v-model="borrowBook.ngaytra" type="date" />
-        </div>
+        </div> -->
 
       <div class="form-actions">
         <button @click="$emit('close')" class="cancel">Hủy</button>
@@ -40,7 +40,7 @@ export default {
         madocgia: this.book.madocgia,
         masach: this.book.masach,
         ngaymuon: "",
-        ngaytra: "",
+        // ngaytra: "",
       }
     };
   },

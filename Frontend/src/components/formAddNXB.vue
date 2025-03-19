@@ -4,7 +4,8 @@
       <h2>Thêm NXB</h2>
       <form>
         <label>Mã Nhà Xuất Bản:</label>
-        <input type="text" v-model="nxb.maNXB" required />
+        <input type="text" v-model="nxb.maNXB" @blur="validateMaNXB" required />
+        <p v-if=" errorMessage" class="error-message" style="color: red;">{{ errorMessage }}</p>
 
         <label>Tên Nhà Xuất Bản:</label>
         <input type="text" v-model="nxb.tennxb" required />
@@ -22,6 +23,9 @@
 </template>
 
 <script>
+
+import nxbService from "@/services/nxb.service";
+
 export default {
   data() {
     return {
@@ -29,11 +33,29 @@ export default {
         maNXB: "",
         tennxb: "",
         diachi: ""
-      }
+      },
+      errorMessage: "",
+      
     };
   },
   methods: {
-    addNXB() {
+    async validateMaNXB() {
+      try {
+        const response = await nxbService.getNXBbyID(this.nxb.maNXB);
+        if (response.data) {
+          this.errorMessage = "NXB đã tồn tại"
+        }
+        else {
+          this.errorMessage = "";
+        }
+      }
+      catch (error) {
+        this.errorMessage = "";
+      }
+    },
+    async addNXB() {
+      await this.validateMaNXB();
+      if (this.errorMessage) return;
       this.$emit("add-nxb", this.nxb);
       this.nxb = { maNXB: "", tennxb: "", diachi: "" }; // Reset form sau khi thêm
     }
@@ -101,9 +123,7 @@ input {
 }
 
 .submit {
-background-color: green;
+  background-color: green;
   color: white;
 }
 </style>
-
-

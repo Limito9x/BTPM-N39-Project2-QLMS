@@ -78,18 +78,8 @@ class TheodoiMuonSachService {
   }
 
   async delete(id) {
-    const doc = await this.managementBook.findOne({maMuon: id}); // tìm sách với id 
-
-    // xóa sách
     const result = await this.managementBook.findOneAndDelete({
       maMuon: id,
-    });
-
-    //cập nhật lại số quyển sách
-    const sach = await this.sachService.findById(doc.masach); // lấy thông tin sách từ id đã nhập vào
-    await this.sachService.update(doc.masach, {
-      soquyen: sach.soquyen + 1,
-      maNXB: sach.maNXB,
     });
     return result;
   }

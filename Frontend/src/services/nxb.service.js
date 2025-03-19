@@ -5,6 +5,10 @@ export default {
     return createAPI.get("/nxb");
   },
 
+  getNXBbyID(id) {
+    return createAPI.get(`/nxb/${id}`)
+  },
+
   createNXB(Data) {
     return createAPI.post("/nxb", Data);
   },

@@ -44,12 +44,9 @@ export default {
   methods: {
     submitForm() {
         this.$emit("edit-staff", this.editStaff); // truyền ra cha
-        this.resetForm();
+        this.editStaff = { msnv: "", hotenNV: "", password: "", chucvu: "", diachi: "", dienthoai: "", };
+        this.errorMessage = "";
     },
-    resetForm() {
-      this.editStaff = { msnv: "", hotenNV: "", password: "", chucvu: "", diachi: "", dienthoai: "", };
-      this.errorMessage = "";
-    }
   },
     watch: {
     staff(newStaff) {

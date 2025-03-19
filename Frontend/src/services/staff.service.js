@@ -5,6 +5,10 @@ export default {
     return createAPI.get("/nhanvien");
   },
 
+  getStaffByID(id) {
+    return createAPI.get(`/nhanvien/${id}`);
+  },
+
   createStaff(Data) {
     return createAPI.post("/nhanvien", Data);
   },

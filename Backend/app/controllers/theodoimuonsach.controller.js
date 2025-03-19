@@ -4,9 +4,6 @@ const ApiError = require("../api-error");
 
 // Thêm sach mới
 exports.create = async (req, res, next) => {
-  if (!req.body?.ngaytra) {
-    return next(new ApiError(400, "Tên không được để trống"));
-  }
 
   try {
     const theodoimuonsachService = new TheoDoiMuonSachService(MongoDB.client);

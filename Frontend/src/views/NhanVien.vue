@@ -60,7 +60,7 @@ export default {
         const response = await staffService.getAllStaff(); 
         this.staffs = response.data;
       } catch (error) {
-        console.error("Lỗi khi lấy danh sách sách:", error);
+        console.error("Lỗi khi lấy danh sách sách nhân viên:", error);
       }
     },
     
@@ -69,7 +69,7 @@ export default {
         await staffService.createStaff(staff);
         await this.fetchStaffs(); // Cập nhật danh sách sau khi thêm thành công
         this.showForm = false; // Ẩn form sau khi lưu
-        console.log("Thêm nhân viên thành công!");
+        alert("Thêm nhân viên thành công!");
       } catch (error) {
         console.error("Lỗi khi thêm nhân viên:", error);
       }
@@ -80,7 +80,7 @@ export default {
       try {
         await staffService.deleteStaff(id);
         await this.fetchStaffs();
-        console.log("Xóa nhân viên thành công!");
+        alert("Xóa nhân viên thành công!");
       } catch (error) {
         console.error("Lỗi khi xóa nhân viên:", error);
       }
@@ -96,7 +96,7 @@ export default {
         await staffService.updateStaff(updatedStaff.msnv,updatedStaff);
         await this.fetchStaffs();
         this.showEditForm = false;
-        console.log("Cập nhật sách thành công!");
+        alert("Cập nhật sách thành công!");
       } catch (error) {
         console.error("Lỗi khi cập nhật sách:", error);
       }
