@@ -19,7 +19,7 @@
               Đã trả sách
             </label>
             <div class="actions">
-              <button @click="deleteBorrowBook(borrowbook.maMuon)" class="delete">XÓA</button>
+              <button @click="deleteBorrowBook(borrowbook.maMuon,borrowbook.datra, borrowbook.masach)" class="delete">XÓA</button>
               <!-- <button @click="openEditForm(borrowbook)" class="edit">Chỉnh sửa</button> -->
             </div>
           </div>
@@ -56,15 +56,29 @@ export default {
   methods: {
     async fetchBorrowbooks() { // [GET]
       try {
+        const borrowBooks = await borrowBookService.getAllBorrowBook()
+        console.log(borrowBooks)
+        
         const response = await borrowBookService.getAllBorrowBook();
         this.borrowbooks = response.data;
       } catch (error) {
+
         console.error(`lỗi khi mượn sách ${error}`);
       }
     },
-    async deleteBorrowBook(id) { // [DELETE]
+    async deleteBorrowBook(id,datra,masach) { // [DELETE] id = maMuon
       if (!confirm("Bạn có chắc chắn muốn xóa thẻ mượn sách này?")) return;
       try {
+        console.log(datra)
+        const dataBook = await bookService.getBookByID(masach);
+        
+        if (datra === false){
+          await bookService.updateBook(masach, {
+            maNXB: dataBook.data.maNXB,
+            soquyen: dataBook.data.soquyen + 1,
+
+          })
+        }
         await borrowBookService.deleteBorrowBook(id);
         this.fetchBorrowbooks();
         alert("Xóa thẻ mượn sách thành công!");
@@ -73,7 +87,7 @@ export default {
       }
     },
     openEditForm(borrowbook) {
-      this.selectedBorrowBook = { ...borrowbook }; // Lưu sách đang chỉnh sửa
+      this.selectedBorrowBook = { ...borrowbook }; // Lưu thẻ mượn sách đang chỉnh sửa
       this.showEditForm = true; // Hiển thị form chỉnh sửa
     },
 

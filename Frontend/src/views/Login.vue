@@ -2,7 +2,8 @@
   <div class="login-container">
     <div class="login-box">
       <div class="tabs">
-        <span :class="{ active: isLogin }" @click="isLogin = true">Login</span>
+        <!-- mặc định là login -->
+        <span :class="{ active: isLogin }" @click="isLogin = true">Login</span> 
         <span :class="{ active: !isLogin }" @click="isLogin = false">Sign Up</span>
       </div>
 
@@ -43,7 +44,7 @@ import staffService from "@/services/staff.service";
 export default {
   data() {
     return {
-      isLogin: true, // Mặc định là login
+      isLogin: true, // Mặc định là  tab login
       loginData: {
         tendangnhap: "",
         password: ""

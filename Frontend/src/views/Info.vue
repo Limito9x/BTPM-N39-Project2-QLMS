@@ -60,9 +60,9 @@ export default {
         const user = JSON.parse(localStorage.getItem("user"));
         const madocgia = user ? user.id : null;
 
-        
+        console.log(madocgia)
         const response = await readerService.getByIdUser(madocgia); 
-        this.reader = response.data.length ? response.data[0] : null;
+        this.reader = response.data;
 
         console.log(this.reader)
       } catch (error) {
@@ -78,14 +78,23 @@ export default {
 
         const updateMadocgia = `deleted_${this.reader.madocgia}`
         await readerService.updateReader(id, {madocgia: updateMadocgia});
-        await borrowBookService.updateBorrowBook(id,{madocgia: updateMadocgia})
+
+        const borrowData = await borrowBookService.getByIdUser(this.reader.madocgia);
+        if (borrowData.data.length > 0) {
+          // Duyệt qua từng thẻ mượn và cập nhật mã độc giả
+          await Promise.all(
+            borrowData.data.map(async (borrow) => {
+              await borrowBookService.updateBorrowBook(borrow.maMuon, { madocgia: updateMadocgia });
+            })
+          );
+        }
 
         localStorage.removeItem("user"); // Xóa trạng thái đăng nhập
         this.$router.push("/") // chuyển về trang chủ
 
-        console.log("Xóa độọ giả thành công!");
+        console.log("Xóa tài khoản thành công!");
       } catch (error) {
-        console.error("Lỗi khi xóa đọc giả:", error);
+        console.error("Lỗi khi tài khoản:", error);
       }
     },
     openEditForm(reader) {

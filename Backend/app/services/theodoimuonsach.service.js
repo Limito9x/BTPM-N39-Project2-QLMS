@@ -27,7 +27,7 @@ class TheodoiMuonSachService {
       masach: payload.masach,
       ngaymuon: payload.ngaymuon,
       ngaytra: payload.ngaytra,
-      datra: false // trạng thái trả sách
+      datra: false, // trạng thái trả sách
     };
 
     Object.keys(managementBook).forEach(
@@ -37,7 +37,7 @@ class TheodoiMuonSachService {
   }
 
   async create(payload) {
-    const managementBook = await this.extractManagementBookData(payload); 
+    const managementBook = await this.extractManagementBookData(payload);
     const sach = await this.sachService.findById(payload.masach);
 
     const result = await this.managementBook.insertOne(managementBook);
@@ -51,12 +51,6 @@ class TheodoiMuonSachService {
   async find(filter) {
     const cursor = await this.managementBook.find(filter);
     return await cursor.toArray();
-  }
-
-  async findByName(name) {
-    return await this.find({
-      _id: { $regex: new RegExp(name), $options: "i" },
-    });
   }
 
   async findByIdUser(id) {
