@@ -14,14 +14,16 @@
             <p><strong>Mã sách: </strong> {{ borrowbook.masach }}</p>
             <p><strong>Ngày mượn: </strong> {{ borrowbook.ngaymuon }}</p>
             <p><strong>Ngày đăng ký trả: </strong> {{ borrowbook.ngaytra }}</p>
+            <label>
+              <input type="checkbox" v-model="borrowbook.datra" @change="changeStatus(borrowbook)" />
+              Đã trả sách
+            </label>
             <div class="actions">
               <button @click="deleteBorrowBook(borrowbook.maMuon)" class="delete">XÓA</button>
               <button @click="openEditForm(borrowbook)" class="edit">Chỉnh sửa</button>
             </div>
           </div>
-          <FormEditBorrow v-if="showEditForm" 
-            :borrowbook="selectedBorrowBook" 
-            @edit-borrowBook="editBorrowBook"
+          <FormEditBorrow v-if="showEditForm" :borrowbook="selectedBorrowBook" @edit-borrowBook="editBorrowBook"
             @close="showEditForm = false" />
         </div>
       </div>
@@ -34,6 +36,7 @@ import Header from "@/components/header.vue";
 import FormAddBook from "@/components/formAddBook.vue";
 import FormEditBorrow from "@/components/formEditBorrow.vue";
 import borrowBookService from "@/services/borrowBook.service";
+import { data } from "jquery";
 
 export default {
   components: {
@@ -44,8 +47,8 @@ export default {
   },
   data() {
     return {
-      borrowbooks: [], 
-      showForm: false, 
+      borrowbooks: [],
+      showForm: false,
       showEditForm: false,
       selectedBorrowBook: null,
     };
@@ -53,7 +56,7 @@ export default {
   methods: {
     async fetchBorrowbooks() { // [GET]
       try {
-        const response = await borrowBookService.getAllBorrowBook(); 
+        const response = await borrowBookService.getAllBorrowBook();
         this.borrowbooks = response.data;
       } catch (error) {
         console.error(`lỗi khi mượn sách ${error}`);
@@ -86,8 +89,19 @@ export default {
         console.error("Lỗi khi chỉnh sửa:", error);
       }
     },
+
+    async changeStatus(borrowBook) {
+      try {
+        await borrowBookService.updateBorrowBook(borrowBook.maMuon, {
+          datra: borrowBook.datra,
+        })
+      }
+      catch (error) {
+        console.log(` Lỗi khi cập nhật ${error}`)
+      }
+    }
   },
-    
+
 
   mounted() {
     this.fetchBorrowbooks();
@@ -211,4 +225,3 @@ p {
   border-radius: 5px;
 }
 </style>
-

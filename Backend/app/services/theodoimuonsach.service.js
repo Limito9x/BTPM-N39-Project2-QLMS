@@ -27,6 +27,7 @@ class TheodoiMuonSachService {
       masach: payload.masach,
       ngaymuon: payload.ngaymuon,
       ngaytra: payload.ngaytra,
+      datra: false // trạng thái trả sách
     };
 
     Object.keys(managementBook).forEach(
@@ -64,7 +65,7 @@ class TheodoiMuonSachService {
 
   async update(id, payload) {
     const filter = {
-      madocgia: id,
+      maMuon: id,
     };
 
     const updateData = {

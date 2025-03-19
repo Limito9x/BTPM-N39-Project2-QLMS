@@ -15,6 +15,7 @@
               <th>Mã Sách</th>
               <th>Ngày mượn</th>
               <th>Ngày trả</th>
+              <th>Đã trả</th>
             </tr>
           </thead>
           <tbody>
@@ -24,6 +25,7 @@
               <td>{{ borrowbook.masach }}</td>
               <td>{{ borrowbook.ngaymuon }}</td>
               <td>{{ borrowbook.ngaytra }}</td>
+              <td>{{ borrowbook.datra === false ? "Chưa trả": "Đã trả" }}</td>
               <!-- thêm trạng thái trả sách -->
             </tr>
           </tbody>
