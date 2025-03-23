@@ -5,6 +5,10 @@ export default {
     return createAPI.get("/theodoimuonsach");
   },
 
+  getBorrowBookByName(name) {
+    return createAPI.get(`/theodoimuonsach?ten=${encodeURIComponent(name)}`);
+  },
+
   createBorrowBook(Data) {
     return createAPI.post("/theodoimuonsach", Data);
   },
@@ -18,6 +22,6 @@ export default {
   },
 
   getByIdUser(id) {
-    return createAPI.get(`/theodoimuonsach/${id}`)
-  }
+    return createAPI.get(`/theodoimuonsach/${id}`);
+  },
 };

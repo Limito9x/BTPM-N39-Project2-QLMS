@@ -5,8 +5,12 @@ export default {
     return createAPI.get("/reader");
   },
 
-  createReader(readerData){
-    return createAPI.post("/reader",readerData)
+  getReaderByName(name) {
+    return createAPI.get(`/reader?ten=${encodeURIComponent(name)}`);
+  },
+
+  createReader(readerData) {
+    return createAPI.post("/reader", readerData);
   },
 
   updateReader(id, updateData) {

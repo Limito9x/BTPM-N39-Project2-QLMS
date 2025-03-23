@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header />
+      <Header @search="searchStaff"/>
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Nhân Viên</h2>
@@ -100,7 +100,16 @@ export default {
       } catch (error) {
         console.error("Lỗi khi cập nhật sách:", error);
       }
-    }
+    },
+
+    async searchStaff(query) {
+      try {
+        const response = await staffService.getStaffByName(query);
+        this.staffs = response.data;
+      } catch (error) {
+        console.log(` lỗi khi tìm kiếm ${error}`)
+      }
+    },
   },
 
   mounted() {
@@ -131,7 +140,7 @@ export default {
 
 .staff-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }

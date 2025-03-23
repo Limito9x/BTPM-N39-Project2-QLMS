@@ -10,7 +10,7 @@ export default {
   },
 
   getBookByName(name) {
-    return createAPI.get(`/sach/search?ten=${encodeURIComponent(name)}`);
+    return createAPI.get(`/sach?ten=${encodeURIComponent(name)}`);
   },
 
   createBook(bookData) {

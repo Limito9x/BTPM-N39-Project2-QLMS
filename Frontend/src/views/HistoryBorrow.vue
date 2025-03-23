@@ -15,7 +15,7 @@
               <th>Mã Sách</th>
               <th>Ngày mượn</th>
               <th>Ngày trả</th>
-              <th>Đã trả</th>
+              <th>Trạng thái trả</th>
             </tr>
           </thead>
           <tbody>
@@ -143,7 +143,7 @@ export default {
 }
 
 .borrow-table th {
-  background-color: #f2f2f2;
+  background-color: #3EAEF4;
 }
 
 .delete {

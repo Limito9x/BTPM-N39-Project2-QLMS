@@ -9,6 +9,10 @@ export default {
     return createAPI.get(`/nhanvien/${id}`);
   },
 
+  getStaffByName(name) {
+    return createAPI.get(`/nhanvien?ten=${encodeURIComponent(name)}`);
+  },
+
   createStaff(Data) {
     return createAPI.post("/nhanvien", Data);
   },

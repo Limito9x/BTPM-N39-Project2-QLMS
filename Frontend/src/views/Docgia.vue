@@ -2,10 +2,10 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header />
+      <Header @search="searchReader"/>
       <div class="content">
         <div class="top-bar">
-          <h2>Danh Sách Độc Giả</h2>
+          <h2>Danh Sách Đọc Giả</h2>
         </div>
 
         <div class="reader-list">
@@ -54,16 +54,6 @@ export default {
         console.error("Lỗi khi lấy danh sách sách:", error);
       }
     },
-    
-    // async create(reader) { 
-    //   try {
-    //     await readerService.createReader(reader);
-    //     await this.fetchReaders(); // Cập nhật lại sau khi thêm
-    //     this.showForm = false; // Ẩn form sau khi lưu
-    //   } catch (error) {
-    //     console.error("Lỗi khi thêm đọc giả:", error);
-    //   }
-    // },
 
     async deleteReader(id) {
       if (!confirm("Bạn có chắc chắn muốn xóa đọc giả này?")) return;
@@ -74,7 +64,16 @@ export default {
       } catch (error) {
         console.error("Lỗi khi xóa đọc giả:", error);
       }
-    }
+    },
+
+    async searchReader(query) {
+      try {
+        const response = await readerService.getReaderByName(query);
+        this.readers = response.data;
+      } catch (error) {
+        console.log(` lỗi khi tìm kiếm ${error}`)
+      }
+    },
   },
   mounted() {
     this.fetchReaders();

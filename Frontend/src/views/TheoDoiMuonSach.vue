@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header />
+      <Header @search="searchBorrowBook"/>
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Mượn Sách</h2>
@@ -112,10 +112,18 @@ export default {
       catch (error) {
         console.log(` Lỗi khi cập nhật ${error}`)
       }
-    }
+    },
+
+    async searchBorrowBook(query) {
+      try {
+        const response = await borrowBookService.getBorrowBookByName(query);
+        this.borrowbooks = response.data;
+      } catch (error) {
+        console.log(` lỗi khi tìm kiếm ${error}`)
+      }
+    },
   },
-
-
+  
   mounted() {
     this.fetchBorrowbooks();
   }

@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header />
+      <Header @search="searchNXB"/>
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Nhà Xuất Bản</h2>
@@ -100,7 +100,16 @@ export default {
       } catch (error) {
         console.error("Lỗi khi cập nhật nhà xuất bản:", error);
       }
-    }
+    },
+
+    async searchNXB(query){
+      try {
+        const response = await nxbService.getNXBByName(query);
+        this.nxbs = response.data;
+      } catch (error) {
+        console.log(` lỗi khi tìm kiếm ${error}`)
+      }
+    },
   },
   mounted() {
     this.fetchNXB();

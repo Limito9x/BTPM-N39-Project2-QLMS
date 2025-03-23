@@ -6,7 +6,11 @@ export default {
   },
 
   getNXBbyID(id) {
-    return createAPI.get(`/nxb/${id}`)
+    return createAPI.get(`/nxb/${id}`);
+  },
+
+  getNXBByName(name) {
+    return createAPI.get(`/nxb?ten=${encodeURIComponent(name)}`);
   },
 
   createNXB(Data) {
