@@ -53,9 +53,18 @@ class SachService {
   }
 
   async findByName(name) {
-    return await this.find({
-      tensach: { $regex: new RegExp(name), $options: "i" },
-    });
+    if (name===""){
+      return await this.find({});
+    }
+
+    const keywords = name.split(" ").filter((word)=> word.trim() !== "");
+
+    const searchQuery = {
+      tensach: {
+        $regex: new RegExp(keywords.join("|"),"i")
+      },
+    }
+    return await this.find(searchQuery);
   }
 
   async findById(id) {

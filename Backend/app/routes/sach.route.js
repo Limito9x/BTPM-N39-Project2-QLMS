@@ -8,8 +8,9 @@ router
   .get(sach.findAll)
   .post(sach.create)
   .delete(sach.deleteAll);
-
-// router.route("/favorite").get(contacts.findAllFavorite);
+  
+router
+  .route("/search").get(sach.findByName);
 
 router
   .route("/:id")

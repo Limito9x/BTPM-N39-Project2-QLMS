@@ -50,6 +50,23 @@ exports.findOne = async (req, res, next) => {
   }
 };
 
+// lấy sách theo tên
+exports.findByName = async (req, res, next) => {
+  try {
+    const sachService = new SachService(MongoDB.client);
+    const {ten} = req.query;
+
+    let docs;
+    if (!ten) {
+       docs = await sachService.find({}); // trả về tất cả khi k có tham số
+    }
+     docs = await sachService.findByName(ten);
+    return res.send(docs);
+  } catch (error) {
+    return next(new ApiError(500,`lỗi khi tìm kiếm ${error}` ))
+  }
+};
+
 // Cập nhật thông tin sách
 exports.update = async (req, res, next) => {
   const { id } = req.params;
