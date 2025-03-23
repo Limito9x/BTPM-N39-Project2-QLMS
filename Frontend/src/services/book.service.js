@@ -9,6 +9,10 @@ export default {
     return createAPI.get(`/sach/${id}`);
   },
 
+  getBookByName(name) {
+    return createAPI.get(`/sach/search?ten=${encodeURIComponent(name)}`);
+  },
+
   createBook(bookData) {
     return createAPI.post("/sach", bookData);
   },

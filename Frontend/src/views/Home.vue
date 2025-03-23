@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header />
+      <Header @search="searchBooksByReader"/>
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Sách</h2>
@@ -77,6 +77,16 @@ export default {
       // console.log("Mở form mượn sách:", book);
       this.selectedBook = {...book, madocgia};
       this.showBorrowForm = true;
+    },
+
+    // tìm kiếm theo tên
+    async searchBooksByReader(query) {
+      try {
+        const response = await bookService.getBookByName(query);
+        this.books = response.data;
+      } catch (error) {
+        console.log(` lỗi khi tìm kiếm ${error}`)
+      }
     },
   },
   mounted() {

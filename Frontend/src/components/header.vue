@@ -1,9 +1,16 @@
 <template>
   <header class="header">
-    <div class="title">QUẢN LÝ MƯỢN SÁCH</div>
+    <div class="title">NHÀ SÁCH ABC</div>
+    <div class="search-bar">
+      <input type="text" v-model="searchQuery" 
+      placeholder="Nhập vào từ khóa tìm kiếm...">
+      <button class="btn seach-btn" @click="$emit('search',searchQuery)">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
     <div class="actions">
-      <div v-if="isLoggedIn" >
-        <span class="username">Xin chào {{ username }} !!</span>      
+      <div v-if="isLoggedIn">
+        <span class="username">Xin chào {{ username }} !!</span>
         <button class="btn logout" @click="logout">Đăng xuất</button>
       </div>
       <button v-else class="btn login" @click="gotoLogin">Đăng nhập</button>
@@ -74,4 +81,28 @@ export default {
   background: #4CAF50;
   color: white;
 }
+
+.search-bar {
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  width: 500px;
+}
+
+.search-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  margin-left: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
 </style>

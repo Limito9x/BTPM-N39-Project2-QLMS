@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header />
+      <Header @search="searchBooks" />
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Sách</h2>
@@ -27,10 +27,7 @@
             </div>
           </div>
 
-          <FormEditBook 
-          v-if="showEditForm":book="selectedBook"
-          @edit-book="editBook" 
-          @close="showEditForm = false" />
+          <FormEditBook v-if="showEditForm" :book="selectedBook" @edit-book="editBook" @close="showEditForm = false" />
         </div>
       </div>
     </div>
@@ -70,7 +67,8 @@ export default {
         console.error("Lỗi khi lấy danh sách sách:", error);
       }
     },
-    async create(book) {  // [POST]
+    //tạo sách
+    async create(book) {  
       try {
         book.soquyen = parseInt(book.soquyen); // chuyển sang kiểu số
         // kiểm tra sách có tồn tài chưa
@@ -82,6 +80,8 @@ export default {
         console.error("Lỗi khi thêm sách:", error);
       }
     },
+
+    // xóa sách
     async deleteBook(id) { 
       if (!confirm("Bạn có chắc chắn muốn xóa sách này?")) return;
       try {
@@ -92,6 +92,18 @@ export default {
         console.error("Lỗi khi xóa sách:", error);
       }
     },
+
+    // tìm kiếm theo tên
+    async searchBooks(query) {
+      try {
+        const response = await bookService.getBookByName(query);
+        this.books = response.data;
+      } catch (error) {
+        console.log(` lỗi khi tìm kiếm ${error}`)
+      }
+    },
+
+    // chỉnh sửa
     openEditForm(book) {
       this.selectedBook = { ...book };  
       this.showEditForm = true;
