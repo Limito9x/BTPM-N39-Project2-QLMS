@@ -7,7 +7,7 @@ class NXBService {
 
   extractNXBData(payload) {
     const nxb = {
-      maNXB: payload.maNXB, 
+      maNXB: payload.maNXB,
       tennxb: payload.tennxb,
       diachi: payload.diachi,
     };
@@ -38,21 +38,29 @@ class NXBService {
     return await cursor.toArray();
   }
 
+  // tìm theo tên
   async findByName(name) {
-    return await this.find({
-      tennxb: { $regex: new RegExp(name), $options: "i" },
-    });
+    if (!name) {
+      return await this.find({});
+    }
+    const keywords = name.split(" ").filter((word) => word.trim() !== "");
+    const searchQuery = {
+      tennxb: {
+        $regex: new RegExp(keywords.join("|"), "i"),
+      },
+    };
+    return await this.find(searchQuery);
   }
 
   async findById(id) {
     return await this.nxb.findOne({
-      maNXB: id
+      maNXB: id,
     });
   }
 
   async update(id, payload) {
     const filter = {
-      maNXB: id
+      maNXB: id,
     };
     const data = this.extractNXBData(payload);
     const res = await this.nxb.findOneAndUpdate(

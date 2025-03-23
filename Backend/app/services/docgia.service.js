@@ -49,12 +49,21 @@ class ReaderService {
 
   // tìm theo tên
   async findByName(name) {
-    return await this.find({
-      ten: { $regex: new RegExp(name), $options: "i" },
-    });
+    if (!name) {
+      return await this.find({});
+    }
+
+    const keywords = name.split(" ").filter((word) => word.trim() !== "");
+
+    const searchQuery = {
+      ten: {
+        $regex: new RegExp(keywords.join("|"), "i"),
+      },
+    };
+    return await this.find(searchQuery);
   }
 
-  // timg theo ID
+  // tìm theo ID
   async findByIdUser(id) {
     return await this.Reader.findOne({ madocgia: id })
   }

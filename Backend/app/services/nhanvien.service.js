@@ -2,12 +2,12 @@ const { ObjectId } = require("mongodb");
 
 class nhanVienService {
   constructor(client) {
-    this.NhanVien = client.db().collection("nhanvien"); 
+    this.NhanVien = client.db().collection("nhanvien");
   }
 
   extractNhanVienData(payload) {
     const nhanvien = {
-      msnv: payload.msnv, 
+      msnv: payload.msnv,
       hotenNV: payload.hotenNV,
       password: payload.password,
       chucvu: payload.chucvu,
@@ -26,7 +26,7 @@ class nhanVienService {
     const NhanVien = this.extractNhanVienData(payload);
     // Kiểm tra đã tồn tại chưa
     const existNhanVien = await this.NhanVien.findOne({
-      msnv: NhanVien.msnv
+      msnv: NhanVien.msnv,
     });
 
     if (existNhanVien) {
@@ -42,15 +42,25 @@ class nhanVienService {
     return await cursor.toArray();
   }
 
+  // tìm theo tên
   async findByName(name) {
-    return await this.find({
-      hotenNV: { $regex: new RegExp(name), $options: "i" },
-    });
+    if (!name) {
+      return await this.find({});
+    }
+
+    const keywords = name.split(" ").filter((word) => word.trim() !== "");
+
+    const searchQuery = {
+      hotenNV: {
+        $regex: new RegExp(keywords.join("|"), "i"),
+      },
+    };
+    return await this.find(searchQuery);
   }
 
   async findById(id) {
     return await this.NhanVien.findOne({
-      msnv: id
+      msnv: id,
     });
   }
 

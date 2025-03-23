@@ -53,6 +53,19 @@ class TheodoiMuonSachService {
     return await cursor.toArray();
   }
 
+  // tìm theo tên
+  async findByName(name) {
+    if (!name) {
+      return await this.find({});
+    }
+    const keywords = name.split(" ").filter((word) => word.trim() !== "");
+    const searchQuery = {
+      maMuon: {
+        $regex: new RegExp(keywords.join("|"), "i"),
+      },
+    };
+    return await this.find(searchQuery);
+  }
   async findByIdUser(id) {
     return await this.managementBook.find({ madocgia: id }).toArray();
   }
@@ -67,7 +80,6 @@ class TheodoiMuonSachService {
     };
 
     const res = await this.managementBook.updateMany(filter, updateData);
-
     return res;
   }
 

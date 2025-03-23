@@ -10,9 +10,6 @@ router
   .delete(sach.deleteAll);
   
 router
-  .route("/search").get(sach.findByName);
-
-router
   .route("/:id")
   .get(sach.findOne)
   .put(sach.update)
