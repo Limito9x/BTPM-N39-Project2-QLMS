@@ -7,7 +7,7 @@
         <div class="top-bar">
           <h2>Danh Sách Nhân Viên</h2>
         </div>
-        <button @click="showForm = true" class="add">Thêm Nhân viên</button>
+        <button v-if="isManager" @click="showForm = true" class="add">Thêm Nhân viên</button>
 
         <FormAddStaff v-if="showForm" @add-staff="create" @close="showForm = false" />
 
@@ -19,7 +19,7 @@
             <p><strong>Địa chỉ: </strong>{{ staff.diachi }}</p>
             <p><strong>SĐT: </strong>{{ staff.dienthoai }}</p>
             <p><strong>Mật khẩu: </strong>{{ staff.password }}</p>
-            <div class="actions">
+            <div class="actions" v-if="isManager">
               <button @click="deleteStaff(staff.msnv)" class="delete">XÓA</button>
               <button @click="openEditForm(staff)" class="edit">Chỉnh sửa</button>
             </div>
@@ -52,6 +52,7 @@ export default {
       showForm: false,
       selectedStaff: null,
       showEditForm : false,
+      isManager: false,
     };
   },
   methods: {
@@ -59,6 +60,10 @@ export default {
       try {
         const response = await staffService.getAllStaff(); 
         this.staffs = response.data;
+        const user = JSON.parse(localStorage.getItem("user"));
+        const chucvu = user.chucvu.toLowerCase();
+        // console.log(chucvu);
+        this.isManager = chucvu === "quản lý"
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sách nhân viên:", error);
       }

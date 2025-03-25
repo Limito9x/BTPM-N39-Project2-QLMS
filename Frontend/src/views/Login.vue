@@ -105,7 +105,7 @@ export default {
         }
         else if (staff && staff.password === this.loginData.password) {
           alert("Đăng nhập thành công với tư cách Nhân Viên!");
-          localStorage.setItem("user", JSON.stringify({ id: staff.msnv, role: "staff", username: staff.hotenNV }));
+          localStorage.setItem("user", JSON.stringify({ id: staff.msnv, role: "staff", username: staff.hotenNV, chucvu:staff.chucvu }));
           this.$router.push("/admin/");
         }
         else {
