@@ -98,13 +98,13 @@ export default {
         const staff = staffRes.data.find(staff => staff.msnv === this.loginData.tendangnhap)
 
         if (user && user.pass === this.loginData.password) {
-          alert("Đăng nhập thành công với tư các Đọc Giả");
+          // alert("Đăng nhập thành công với tư các Đọc Giả");
           this.$router.push("/");
           localStorage.setItem("user", JSON.stringify({ id: user.madocgia, role: "reader", username: user.ten }));
           this.$router.push("/");
         }
         else if (staff && staff.password === this.loginData.password) {
-          alert("Đăng nhập thành công với tư cách Nhân Viên!");
+          // alert("Đăng nhập thành công với tư cách Nhân Viên!");
           localStorage.setItem("user", JSON.stringify({ id: staff.msnv, role: "staff", username: staff.hotenNV, chucvu:staff.chucvu }));
           this.$router.push("/admin/");
         }
@@ -119,15 +119,8 @@ export default {
 
     async register() {
       try {
-        //  kiểm tra thêm tendangnhap đã tồn tại chưa
-        // const readerRes = await readerService.getAllReader();
-        // console.log(readerRes);
-
-        // const madocgiaList = readerRes.data.map(reader => reader.madocgia);
-        // console.log("Danh sách mã độc giả:", madocgiaList);
         await this.checkMadocgia();
         if (this.madocgiaError) return
-        //  Mật khẩu từ 5 số trở lên
 
         // kiểm tra mật khẩu trùng khớp
         if (this.registerData.pass !== this.confirmPassword) {

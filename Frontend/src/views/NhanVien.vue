@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header @search="searchStaff"/>
+      <Header @search="searchStaff" />
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Nhân Viên</h2>
@@ -51,14 +51,14 @@ export default {
       staffs: [],
       showForm: false,
       selectedStaff: null,
-      showEditForm : false,
+      showEditForm: false,
       isManager: false,
     };
   },
   methods: {
-    async fetchStaffs() { 
+    async fetchStaffs() {
       try {
-        const response = await staffService.getAllStaff(); 
+        const response = await staffService.getAllStaff();
         this.staffs = response.data;
         const user = JSON.parse(localStorage.getItem("user"));
         const chucvu = user.chucvu.toLowerCase();
@@ -68,8 +68,8 @@ export default {
         console.error("Lỗi khi lấy danh sách sách nhân viên:", error);
       }
     },
-    
-    async create(staff) { 
+
+    async create(staff) {
       try {
         await staffService.createStaff(staff);
         await this.fetchStaffs(); // Cập nhật danh sách sau khi thêm thành công
@@ -91,14 +91,14 @@ export default {
       }
     },
     openEditForm(nhanvien) {
-      this.selectedStaff = { ...nhanvien };  
+      this.selectedStaff = { ...nhanvien };
       this.showEditForm = true;
     },
 
-    async editStaff(updatedStaff) {  
+    async editStaff(updatedStaff) {
       try {
         console.log(updatedStaff.msnv);
-        await staffService.updateStaff(updatedStaff.msnv,updatedStaff);
+        await staffService.updateStaff(updatedStaff.msnv, updatedStaff);
         await this.fetchStaffs();
         this.showEditForm = false;
         alert("Cập nhật sách thành công!");
