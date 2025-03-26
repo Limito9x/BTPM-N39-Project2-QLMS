@@ -40,6 +40,10 @@ export default {
   },
   methods: {
     async validateMaNXB() {
+      if (!this.nxb.maNXB) {
+        this.errorMessage = "Bạn chưa nhập mã nhà xuất bản";
+        return;
+      }
       try {
         const response = await nxbService.getNXBbyID(this.nxb.maNXB);
         if (response.data) {
@@ -57,7 +61,7 @@ export default {
       await this.validateMaNXB();
       if (this.errorMessage) return;
       this.$emit("add-nxb", this.nxb);
-      this.nxb = { maNXB: "", tennxb: "", diachi: "" }; // Reset form sau khi thêm
+      // this.nxb = { maNXB: "", tennxb: "", diachi: "" };
     }
   }
 };

@@ -32,7 +32,7 @@ export default {
     methods: {
         submitForm() {
             this.$emit("edit-borrowBook", this.editedBorrowBook);
-            this.editedBorrowBook = { madocgia: "", masach: "", ngaytra: "", ngaymuon: "" };
+            // this.editedBorrowBook = { madocgia: "", masach: "", ngaytra: "", ngaymuon: "" };
             this.errorMessage = "";
         },
     },

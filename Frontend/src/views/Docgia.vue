@@ -16,7 +16,7 @@
             <p><strong>Phái:</strong> {{ reader.phai }}</p>
             <p><strong>Địa Chỉ:</strong> {{ reader.diachi }}</p>
             <p><strong>Số điện thoại:</strong> {{ reader.dienthoai }}</p>
-            <p><strong>Mật khẩu:</strong> {{ reader.pass }}</p>
+            <!-- <p><strong>Mật khẩu:</strong> {{ reader.pass }}</p> -->
             <div class="actions">
               <button @click="deleteReader(reader.madocgia)" class="delete">XÓA</button>
             </div>
@@ -60,7 +60,6 @@ export default {
       try {
         await readerService.deleteDocGia(id);
         await this.fetchReaders(); // cập nhật lại
-        // console.log("Xóa đọc giả thành công!");
       } catch (error) {
         console.error("Lỗi khi xóa đọc giả:", error);
       }

@@ -68,6 +68,7 @@ export default {
         await this.fetchNXB(); // Cập nhật danh sách sau khi thêm thành công
         this.showForm = false; // Ẩn form sau khi lưu
         alert("Thêm nhà xuất bản thành công!");
+        this.fetchNXB();
       } catch (error) {
         console.error("Lỗi khi thêm nhà xuất bản:", error);
       }
@@ -79,6 +80,7 @@ export default {
         await nxbService.deleteNXB(id);
         await this.fetchNXB();
         alert("Xóa nhà xuất bản thành công!");
+        this.fetchNXB();
       } catch (error) {
         console.error("Lỗi khi xóa nhà xuất bản:", error);
       }
@@ -97,6 +99,7 @@ export default {
         await this.fetchNXB();
         this.showEditForm = false;
         alert("Cập nhật nhã xuất bản thành công!");
+        this.fetchNXB();
       } catch (error) {
         console.error("Lỗi khi cập nhật nhà xuất bản:", error);
       }

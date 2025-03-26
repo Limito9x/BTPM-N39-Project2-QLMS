@@ -34,10 +34,10 @@
 import nxbService from "@/services/nxb.service";
 
 export default {
-    props: ["book"],
+    props: ["book"], // lấy dữ liệu từ view/sach
     data() {
         return {
-            editedBook: {...this.book},
+            editedBook: {...this.book}, // k để ảnh hưởng đến cha
             maNXBList: [], 
             errorMessage: "", 
         };
@@ -52,26 +52,31 @@ export default {
         console.error("Lỗi khi lấy danh sách NXB:", error);
       }
     },
-    // lấy các nxb có trong bd
     validateMaNXB() {
-      if (!this.maNXBList.includes(this.editedBook.maNXB)) {
-        this.errorMessage = "Mã NXB không tồn tại trong hệ thống!";
-      } else {
-        this.errorMessage = "";
+      if (!this.editedBook.maNXB) {
+        this.errorMessage = "Bạn chưa nhập mã nhà xuất bản";
+        return;
+      } 
+      else {
+        if (!this.maNXBList.includes(this.editedBook.maNXB)) {
+          this.errorMessage = "Mã NXB không tồn tại trong hệ thống!";
+        } else {
+          this.errorMessage = "";
+        }
       }
     },
     submitForm() {
-      this.validateMaNXB(); // Kiểm tra mã NXB trước khi gửi form
-      if (this.errorMessage) return; // Nếu có lỗi thì không gửi form
+      this.validateMaNXB(); 
+      if (this.errorMessage) return; 
 
       this.$emit("edit-book", this.editedBook);
-      this.editedBook = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
+      // this.editedBook = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
       this.errorMessage = "";
     },
   },
     watch: {
         book(newBook) {
-          this.editedBook = { ...newBook }; // Cập nhật dữ liệu khi prop thay đổi
+          this.editedBook = { ...newBook }; 
         }
     },
     mounted() {

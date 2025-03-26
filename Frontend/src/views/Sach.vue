@@ -76,6 +76,7 @@ export default {
         await this.fetchBooks(); // Cập nhật danh sách sau khi thêm thành công
         this.showForm = false; // Ẩn form sau khi lưu
         alert("Thêm sách thành công!");
+        this.fetchBooks();
       } catch (error) {
         console.error("Lỗi khi thêm sách:", error);
       }
@@ -88,6 +89,7 @@ export default {
         await bookService.deleteBook(id);
         this.books = this.books.filter(book => book._id !== id);
         alert("Xóa sách thành công!");
+        this.fetchBooks();
       } catch (error) {
         console.error("Lỗi khi xóa sách:", error);
       }
@@ -114,6 +116,7 @@ export default {
         await this.fetchBooks();
         this.showEditForm = false;
         alert("Cập nhật sách thành công!");
+        this.fetchBooks();
       } catch (error) {
           console.error("Lỗi khi cập nhật sách:", error);
       }

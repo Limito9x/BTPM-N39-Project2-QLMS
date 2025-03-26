@@ -18,7 +18,7 @@
             <p><strong>Chức vụ: </strong>{{ staff.chucvu }}</p>
             <p><strong>Địa chỉ: </strong>{{ staff.diachi }}</p>
             <p><strong>SĐT: </strong>{{ staff.dienthoai }}</p>
-            <p><strong>Mật khẩu: </strong>{{ staff.password }}</p>
+            <!-- <p><strong>Mật khẩu: </strong>{{ staff.password }}</p> -->
             <div class="actions" v-if="isManager">
               <button @click="deleteStaff(staff.msnv)" class="delete">XÓA</button>
               <button @click="openEditForm(staff)" class="edit">Chỉnh sửa</button>
@@ -75,6 +75,7 @@ export default {
         await this.fetchStaffs(); // Cập nhật danh sách sau khi thêm thành công
         this.showForm = false; // Ẩn form sau khi lưu
         alert("Thêm nhân viên thành công!");
+        this.fetchStaffs();
       } catch (error) {
         console.error("Lỗi khi thêm nhân viên:", error);
       }
@@ -86,6 +87,7 @@ export default {
         await staffService.deleteStaff(id);
         await this.fetchStaffs();
         alert("Xóa nhân viên thành công!");
+        this.fetchStaffs();
       } catch (error) {
         console.error("Lỗi khi xóa nhân viên:", error);
       }
@@ -102,6 +104,7 @@ export default {
         await this.fetchStaffs();
         this.showEditForm = false;
         alert("Cập nhật sách thành công!");
+        this.fetchStaffs();
       } catch (error) {
         console.error("Lỗi khi cập nhật sách:", error);
       }

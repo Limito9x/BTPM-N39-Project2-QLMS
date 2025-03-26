@@ -64,13 +64,22 @@ export default {
       }
     },
     validateMaNXB() {
-      if (!this.maNXBList.includes(this.book.maNXB)) {
-        this.errorNXB = "Mã NXB không tồn tại !";
-      } else {
-        this.errorMessage = "";
+      if (!this.book.maNXB) {
+        this.errorNXB = "Bạn chưa nhập mã nhà xuất bản";
+      }
+      else {
+        if (!this.maNXBList.includes(this.book.maNXB)) {
+          this.errorNXB = "Mã NXB không tồn tại !";
+        } else {
+          this.errorMessage = "";
+        }
       }
     },
     async validateMasach() {
+      if (!this.book.masach) {
+        this.errorBook = "bạn chưa nhập mã sách"
+        return;
+      }
       try {
         const response = await bookService.getBookByID(this.book.masach);
         if (response.data){
@@ -85,14 +94,14 @@ export default {
       }
     },
     async addBook() {
-      this.validateMaNXB(); // Kiểm tra mã NXB trước khi gửi form
-      if (this.errorNXB) return; // Nếu có lỗi thì không gửi form
+      this.validateMaNXB(); // kiểm tra mã nxb
+      if (this.errorNXB) return; 
 
       await this.validateMasach();
       if (this.errorBook) return
 
       this.$emit("add-book", this.book);
-      this.book = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
+      // this.book = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
       this.errorNXB = "";
     },
   },

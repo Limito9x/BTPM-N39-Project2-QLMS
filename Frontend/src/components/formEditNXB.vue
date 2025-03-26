@@ -30,7 +30,7 @@ export default {
   methods: {
     submitForm() {
         this.$emit("edit-nxb", this.editNXB); 
-        this.editNXB = { maNXB: "", tennxb: "", diachi: ""};
+        // this.editNXB = { maNXB: "", tennxb: "", diachi: ""};
         this.errorMessage = "";
     },
 

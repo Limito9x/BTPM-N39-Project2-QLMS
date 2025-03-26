@@ -10,7 +10,7 @@
     </div>
     <div class="actions">
       <div v-if="isLoggedIn">
-        <span class="username">Xin chào {{ username }} !!</span>
+        <span class="username">Xin chào {{ username }}</span>
         <button class="btn logout" @click="logout">Đăng xuất</button>
       </div>
       <button v-else class="btn login" @click="gotoLogin">Đăng nhập</button>

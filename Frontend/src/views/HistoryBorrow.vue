@@ -13,6 +13,7 @@
               <th>Mã mượn sách</th>
               <th>Mã đọc giả</th>
               <th>Mã Sách</th>
+              <th>Tên sách</th>
               <th>Ngày mượn</th>
               <th>Ngày trả</th>
               <th>Trạng thái trả</th>
@@ -23,9 +24,10 @@
               <td>{{ borrowbook.maMuon }}</td>
               <td>{{ borrowbook.madocgia }}</td>
               <td>{{ borrowbook.masach }}</td>
+              <td>{{ listBook[borrowbook.masach] }}</td>
               <td>{{ borrowbook.ngaymuon }}</td>
-              <td>{{ borrowbook.ngaytra }}</td>
-              <td>{{ borrowbook.datra === false ? "Chưa trả": "Đã trả" }}</td>
+              <td>{{ borrowbook.ngaytra ? borrowbook.ngaytra : "Chưa được trả"}}</td>
+              <td>{{ borrowbook.datra === false ? "Chưa được trả" : "Đã trả" }}</td>
               <!-- thêm trạng thái trả sách -->
             </tr>
           </tbody>
@@ -41,6 +43,7 @@ import Header from "@/components/header.vue";
 import FormAddBook from "@/components/formAddBook.vue";
 import borrowBookService from "@/services/borrowBook.service";
 import { error } from "jquery";
+import bookService from "@/services/book.service";
 
 export default {
   components: {
@@ -50,50 +53,60 @@ export default {
   },
   data() {
     return {
-      borrowbooks: [], 
+      borrowbooks: [],
       showForm: false,
+      listBook: {},
     };
   },
   methods: {
-  async fetchBorrowbooks() { // [GET]
-    try {
+    async fetchBook() {
+      for (let borrowbook of this.borrowbooks) {
+        if (!this.listBook[borrowbook.masach]){
+          const response = await bookService.getBookByID(borrowbook.masach);
+          this.listBook[borrowbook.masach] = response.data.tensach;
+          console.log(response.data.tensach)
+        }
+      }
+    },
+    async fetchBorrowbooks() { // [GET]
+      try {
         //lấy id của user
         const user = JSON.parse(localStorage.getItem("user"));
         const madocgia = user ? user.id : null;
+
         // console.log(madocgia);
         if (!madocgia) {
-            console.error("Người dùng chưa đăng nhập",error);
-            return;
+          console.error("Người dùng chưa đăng nhập", error);
+          return;
         }
 
-        const response = await borrowBookService.getByIdUser(madocgia); 
+        const response = await borrowBookService.getByIdUser(madocgia);
         this.borrowbooks = response.data;
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách mượn sách:", error);
-    }
-  },
-  async deleteBorrowBook(id) { // [DELETE]
-    if (!confirm("Bạn có chắc chắn muốn xóa dòng này?")) return;
-    try {
-      await borrowBookService.deleteBorrowBook(id);
-      this.fetchBorrowbooks();
-      console.log("Xóa thành công!");
-    } catch (error) {
-      console.error("Lỗi khi xóa :", error);
-    }
-},
-  async editBook(book) { //[PUT]
-  try {
-    // const updatedBook = { ...book, tensach: updatedTitle }; 
-    const response = await borrowBookService.updateBorrowBook(book.maMuon,book);
 
-    this.books = this.books.map(b => (b._id === book._id ? response.data : b));
+        await this.fetchBook();
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách mượn sách:", error);
+      }
+    },
+    async deleteBorrowBook(id) { // [DELETE]
+      if (!confirm("Bạn có chắc chắn muốn xóa dòng này?")) return;
+      try {
+        await borrowBookService.deleteBorrowBook(id);
+        this.fetchBorrowbooks();
+      } catch (error) {
+        console.error("Lỗi khi xóa :", error);
+      }
+    },
+    async editBook(book) { //[PUT]
+      try {
+        // const updatedBook = { ...book, tensach: updatedTitle }; 
+        const response = await borrowBookService.updateBorrowBook(book.maMuon, book);
 
-    console.log("Chỉnh sửa thông tin mượn sách thành công!", response.data);
-  } catch (error) {
-    console.error("Lỗi khi chỉnh sửa:", error);
-  }
-}
+        this.books = this.books.map(b => (b._id === book._id ? response.data : b));
+      } catch (error) {
+        console.error("Lỗi khi chỉnh sửa:", error);
+      }
+    }
 
   },
   mounted() {
@@ -123,11 +136,12 @@ export default {
 .form-content {
   margin-top: 20px
 }
+
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
 }
 
 .borrow-table {
@@ -136,7 +150,8 @@ export default {
   margin-top: 20px;
 }
 
-.borrow-table th, .borrow-table td {
+.borrow-table th,
+.borrow-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
@@ -164,7 +179,7 @@ export default {
   border-radius: 5px;
 }
 
-.add{
+.add {
   background-color: blue;
   color: white;
   border: none;
@@ -172,8 +187,8 @@ export default {
   cursor: pointer;
   border-radius: 5px;
 }
+
 button {
   margin-left: 5px;
 }
 </style>
-

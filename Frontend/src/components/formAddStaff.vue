@@ -3,7 +3,7 @@
     <div class="form-container">
       <h3>Thêm Nhân Viên</h3>
       <label for="manv">Mã nhân viên</label>
-      <input id="manv" v-model="staff.msnv" @blur="validateMaNV"/>
+      <input id="manv" v-model="staff.msnv" @blur="validateMaNV" />
       <p v-if="errorStaff" style="color: red;">{{ errorStaff }}</p>
 
 
@@ -14,7 +14,11 @@
       <input v-model="staff.password" />
 
       <label for="chucvu">Chức Vụ</label>
-      <input id="chucvu" v-model="staff.chucvu" />
+      <select v-model="staff.chucvu">
+        <option value="gt" disabled>Chức vụ</option>
+        <option value="Quản lý">Quản lý</option>
+        <option value="Nhân viên">Nhân viên</option>
+      </select>
 
       <label for="diachi">Địa chỉ</label>
       <input id="diachi" v-model="staff.diachi" />
@@ -47,6 +51,10 @@ export default {
   },
   methods: { 
     async validateMaNV() {
+      if (!this.staff.msnv) {
+        this.errorStaff = "Bạn chưa nhập mã nhân viên";
+        return
+      }
       try {
         const response = await staffService.getStaffByID(this.staff.msnv);
         if (response.data) {
@@ -62,8 +70,8 @@ export default {
     async submitForm() {
       this.validateMaNV();
       if (this.errorStaff) return; 
-      this.$emit("add-staff", this.staff); // truyền ra cha
-      this.staff = { msnv: "", hotenNV: "", password: "", chucvu: "", diachi: "", dienthoai: "" };
+      this.$emit("add-staff", this.staff); 
+      // this.staff = { msnv: "", hotenNV: "", password: "", chucvu: "", diachi: "", dienthoai: "" };
     },
 
   }

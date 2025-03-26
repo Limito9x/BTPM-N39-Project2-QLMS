@@ -60,11 +60,9 @@ export default {
         const user = JSON.parse(localStorage.getItem("user"));
         const madocgia = user ? user.id : null;
 
-        console.log(madocgia)
         const response = await readerService.getByIdUser(madocgia); 
         this.reader = response.data;
 
-        console.log(this.reader)
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sách:", error);
       }
@@ -81,7 +79,7 @@ export default {
 
         const borrowData = await borrowBookService.getByIdUser(this.reader.madocgia);
         if (borrowData.data.length > 0) {
-          // Duyệt qua từng thẻ mượn và cập nhật mã độc giả
+          // duyệt từng thẻ mượn và cập nhật mã độc giả
           await Promise.all(
             borrowData.data.map(async (borrow) => {
               await borrowBookService.updateBorrowBook(borrow.maMuon, { madocgia: updateMadocgia });
@@ -92,14 +90,12 @@ export default {
         localStorage.removeItem("user"); // Xóa trạng thái đăng nhập
         this.$router.push("/") // chuyển về trang chủ
 
-        console.log("Xóa tài khoản thành công!");
       } catch (error) {
         console.error("Lỗi khi tài khoản:", error);
       }
     },
     openEditForm(reader) {
       this.selectedReader = { ...reader};  
-      console.log("Đọc giả được chọn để chỉnh sửa:", this.selectedReader);
       this.showEditForm = true;
     },
 
@@ -107,9 +103,10 @@ export default {
       try {
         console.log(updateReader.madocgia);
         await readerService.updateReader(updateReader.madocgia,updateReader);
+        alert("Cập nhật thành công")
         await this.fetchReader();
         this.showEditForm = false;
-        console.log("Cập nhật sách thành công!");
+        this.fetchReader()
       } catch (error) {
         console.error("Lỗi khi cập nhật:", error);
       }

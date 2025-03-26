@@ -1,29 +1,28 @@
 <template>
-  <div class="form-overlay"> 
+  <div class="form-overlay">
     <div class="form-container">
       <h3>Cập Nhật Nhân viên</h3>
       <label for="manv">Mã nhân viên</label>
-      <input id="manv" v-model="editStaff.msnv" disabled/>  
+      <input id="manv" v-model="editStaff.msnv" disabled />
 
       <label for="hoten">Họ tên nhân viên</label>
-      <input id="hoten" v-model="editStaff.hotenNV"/>
+      <input id="hoten" v-model="editStaff.hotenNV" />
 
       <label for="mk">Mật khẩu</label>
-      <input id="mk" v-model="editStaff.password"/>
-      
-      <label for="chucvu">Chức vụ</label>
-      <input id="chucvu" v-model="editStaff.chucvu"/>
+      <input id="mk" v-model="editStaff.password" />
+
+      <label for="chucvu">Chức Vụ</label>
+      <select v-model="editStaff.chucvu">
+        <option value="gt" disabled>Chức vụ</option>
+        <option value="Quản lý">Quản lý</option>
+        <option value="Nhân viên">Nhân viên</option>
+      </select>
 
       <label for="diachi">Địa chỉ</label>
-      <input id="diachi" v-model="editStaff.diachi"/>
+      <input id="diachi" v-model="editStaff.diachi" />
 
       <label for="sdt">Số điện thoại</label>
-      <input id="sdt" v-model="editStaff.dienthoai"/>
-
-      <!-- <label for="maMXB">Nguồn gốc/Tác giả</label>
-      <input id="maMXB" v-model="book.maNXB" @blur="validateMaNXB"/>
-      <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p> -->
-
+      <input id="sdt" v-model="editStaff.dienthoai" />
 
       <button @click="submitForm" class="submit">Lưu</button>
       <button @click="$emit('close')" class="cancel">Hủy</button>
@@ -44,7 +43,7 @@ export default {
   methods: {
     submitForm() {
         this.$emit("edit-staff", this.editStaff); // truyền ra cha
-        this.editStaff = { msnv: "", hotenNV: "", password: "", chucvu: "", diachi: "", dienthoai: "", };
+        // this.editStaff = { msnv: "", hotenNV: "", password: "", chucvu: "", diachi: "", dienthoai: "", };
         this.errorMessage = "";
     },
   },

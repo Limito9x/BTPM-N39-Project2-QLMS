@@ -107,7 +107,7 @@ export default {
 
         })
         alert("Cập nhật thành công")
-
+        this.fetchBorrowbooks();
       }
       catch (error) {
         console.log(` Lỗi khi cập nhật ${error}`)

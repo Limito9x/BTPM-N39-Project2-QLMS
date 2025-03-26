@@ -1,24 +1,20 @@
 <template>
   <div class="borrow-form-overlay" v-if="show">
     <div class="borrow-form">
-        <h2>Mượn Sách</h2>
-        <div>
-            <label>Mã Đọc Giả:</label>
-            <input v-model="borrowBook.madocgia" type="text" readonly/>
-        </div>
-    
-        <div>
-            <label>Mã Sách:</label>
-            <input v-model="borrowBook.masach" type="text" readonly/>
-        </div>  
-        <div>
-            <label>Ngày Mượn:</label>
-            <input v-model="borrowBook.ngaymuon" type="date" />
-        </div>
-        <!-- <div>
-            <label>Ngày Trả</label>
-            <input v-model="borrowBook.ngaytra" type="date" />
-        </div> -->
+      <h2>Mượn Sách</h2>
+      <div>
+        <label>Mã Đọc Giả:</label>
+        <input v-model="borrowBook.madocgia" type="text" readonly />
+      </div>
+
+      <div>
+        <label>Mã Sách:</label>
+        <input v-model="borrowBook.masach" type="text" readonly />
+      </div>
+      <div>
+        <label>Ngày Mượn:</label>
+        <input v-model="borrowBook.ngaymuon" type="date"/>
+      </div>
 
       <div class="form-actions">
         <button @click="$emit('close')" class="cancel">Hủy</button>
@@ -32,7 +28,7 @@
 import borrowBookService from "@/services/borrowBook.service";
 
 export default {
-  props: ["show","book"], // Nhận dữ liệu từ cha
+  props: ["show","book"], 
   data() {
     return {
       borrowBook: {
@@ -40,7 +36,6 @@ export default {
         madocgia: this.book.madocgia,
         masach: this.book.masach,
         ngaymuon: "",
-        // ngaytra: "",
       }
     };
   },
@@ -55,20 +50,19 @@ export default {
     generateID() {
       const now = new Date();
       const day = String(now.getDate()).padStart(2, "0");
-      const month = String(now.getMonth() + 1).padStart(2, "0"); // Tháng tính từ 0 nên +1
+      const month = String(now.getMonth() + 1).padStart(2, "0"); 
       const year = now.getFullYear();
       return `MM${this.book.madocgia}_${this.book.masach}_${day}${month}${year}`;
     },
     async submitForm() {
-    //   if (!this.borrowBook.madocgia || !this.borrowBook.ngaymuon || !this.borrowBook.ngaytra) {
-    //     alert("Vui lòng điền đầy đủ thông tin!");
-    //     return;
-    //   }
+      if (!this.borrowBook.ngaymuon ) {
+        alert("Vui lòng chọn ngày mượn");
+        return;
+      }
       
       try {
         await borrowBookService.createBorrowBook(this.borrowBook);
         alert("Mượn sách thành công!");
-        // borrowBookService.getAllBorrowBook();
         window.location.reload();
         this.$emit("close"); // Đóng form
       } catch (error) {

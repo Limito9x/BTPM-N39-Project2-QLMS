@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header @search="searchBooksByReader"/>
+      <Header @search="searchBooksByReader" />
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Sách</h2>
@@ -19,7 +19,7 @@
             </div>
 
             <p><strong>Năm Xuất Bản:</strong> {{ book.namsanxuat }}</p>
-            <p><strong>Mã Nhà Xuất Bản:</strong> {{ book.maNXB }}</p>
+            <p><strong>Nhà xuất bản:</strong> {{ listNXB[book.maNXB] }}</p>
             <p><strong>Nguồn Gốc/Tác Giả:</strong> {{ book.nguongoc_tacgia }}</p>
             <div class="actions">
               <button class="borrow" @click="openBorrowForm(book)">Mượn</button>
@@ -28,19 +28,18 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Form mượn sách -->
-    <FormBorrowBook 
-      v-if="showBorrowForm" :show="showBorrowForm" :book="selectedBook" 
-      @close="showBorrowForm = false"/>
+    <FormBorrowBook v-if="showBorrowForm" :show="showBorrowForm" :book="selectedBook" @close="showBorrowForm = false" />
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/navbar.vue";
 import Header from "@/components/header.vue";
-import FormBorrowBook from "@/components/formBorrowBook.vue"; // Import form mượn sách
+import FormBorrowBook from "@/components/formBorrowBook.vue";
 import bookService from "@/services/book.service";
+import nxbService from "@/services/nxb.service";
 
 export default {
   components: {
@@ -50,20 +49,37 @@ export default {
   },
   data() {
     return {
-      books: [], 
-      selectedBook: null,  
+      books: [],
+      listNXB: {},
+      selectedBook: null,
       showBorrowForm: false,
     };
   },
   methods: {
+    async fetchNXB() {
+      try {
+        for (let book of this.books) {
+          if (!this.listNXB[book.maNXB]) {
+            const response = await nxbService.getNXBbyID(book.maNXB);
+            this.listNXB[book.maNXB] = response.data.tennxb;
+          }
+        }
+      } catch (error) {
+        console.log("lỗi");
+      }
+    },
     async fetchBooks() {
       try {
         const response = await bookService.getAllBook();
         this.books = response.data;
+
+        await this.fetchNXB();
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sách:", error);
       }
     },
+
+
     openBorrowForm(book) {
       const user = JSON.parse(localStorage.getItem("user"));
       const madocgia = user ? user.id : null;
@@ -75,7 +91,7 @@ export default {
 
       // console.log("Trạng thái",this.showBorrowForm)
       // console.log("Mở form mượn sách:", book);
-      this.selectedBook = {...book, madocgia};
+      this.selectedBook = { ...book, madocgia };
       this.showBorrowForm = true;
     },
 
@@ -159,7 +175,7 @@ p {
 
 .quantity-box {
   display: inline-block;
-  background-color: #ff7e5f; 
+  background-color: #ff7e5f;
   color: white;
   font-weight: bold;
   padding: 5px 12px;
@@ -176,7 +192,7 @@ p {
 }
 
 .borrow {
-  background-color: #28a745; 
+  background-color: #28a745;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -187,11 +203,11 @@ p {
 }
 
 .borrow:hover {
-  background-color: #218838; 
+  background-color: #218838;
 }
 
 .edit {
-  background-color: #007bff; 
+  background-color: #007bff;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -202,11 +218,11 @@ p {
 }
 
 .edit:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
 
 .delete {
-  background-color: #dc3545; 
+  background-color: #dc3545;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -217,7 +233,6 @@ p {
 }
 
 .delete:hover {
-  background-color: #c82333; 
+  background-color: #c82333;
 }
-
 </style>
