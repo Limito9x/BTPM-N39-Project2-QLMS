@@ -3,6 +3,34 @@ const { ObjectId } = require("mongodb");
 class nhanVienService {
   constructor(client) {
     this.NhanVien = client.db().collection("nhanvien");
+    // mặc dịnh 1 tài khoản admin
+    this.init();
+  }
+
+  async init() {
+    await this.createAdmin();
+  }
+  
+  async createAdmin(){
+    try {
+      const admin = await this.NhanVien.findOne({msnv: "admin"});
+
+      if (!admin) {
+        const adminData = {
+          msnv: "admin",
+          hotenNV: "Administrator",
+          password: "admin",
+          chucvu: "Quản lý",
+          diachi: "",
+          dienthoai: "",
+        };
+
+        await this.NhanVien.insertOne(adminData);
+        console.log("thêm admin thành công")
+      }
+    } catch (error) {
+      console.error("thêm admin thất bại")
+    }
   }
 
   extractNhanVienData(payload) {
