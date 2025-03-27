@@ -3,7 +3,7 @@
     <div class="form-container">
       <h3>Thêm Sách</h3>
       <label for="masach">Mã sách</label>
-      <input id="masach" v-model="book.masach " @blur="validateMasach" />
+      <input id="masach" v-model="book.masach" @blur="validateMasach" />
       <p v-if="errorBook" style="color: red;">{{ errorBook }}</p>
 
 
@@ -55,33 +55,47 @@ export default {
     };
   },
   methods: {
-    async fetchNXB() {
-      try {
-        const response = await nxbService.getAllNXB(); // API lấy danh sách NXB
-        this.maNXBList = response.data.map(nxb => nxb.maNXB); // Lấy danh sách mã NXB
-      } catch (error) {
-        console.error("Lỗi khi lấy danh sách NXB:", error);
-      }
-    },
-    validateMaNXB() {
+    // async fetchNXB() {
+    //   try {
+    //     const response = await nxbService.getAllNXB(); // API lấy danh sách NXB
+    //     this.maNXBList = response.data.map(nxb => nxb.maNXB); // Lấy danh sách mã NXB
+    //   } catch (error) {
+    //     console.error("Lỗi khi lấy danh sách NXB:", error);
+    //   }
+    // },
+    // validateMaNXB() {
+    //   if (!this.book.maNXB) {
+    //     this.errorNXB = "Bạn chưa nhập mã nhà xuất bản";
+    //     return
+    //   }
+    //     if (!this.maNXBList.includes(this.book.maNXB)) {
+    //       this.errorNXB = "Mã NXB không tồn tại !";
+    //     } else {
+    //       this.errorMessage = "";
+    //   }
+    // },
+    async validateMaNXB() {
       if (!this.book.maNXB) {
-        this.errorNXB = "Bạn chưa nhập mã nhà xuất bản";
-        return
+        this.errorNXB = "Bạn chưa nhập mã nhà xuất bản"
+        return;
       }
-        if (!this.maNXBList.includes(this.book.maNXB)) {
-          this.errorNXB = "Mã NXB không tồn tại !";
-        } else {
-          this.errorMessage = "";
+      try {
+        const response = await nxbService.getNXBbyID(this.book.maNXB)
+        if (response.data) {
+          this.errorNXB = ""
+        }
+      } catch (error) {
+        this.errorNXB = "Mã nhà xuất bản không tồn tại"
       }
     },
     async validateMasach() {
       if (!this.book.masach) {
-        this.errorBook = "bạn chưa nhập mã sách"
+        this.errorBook = "Bạn chưa nhập mã sách"
         return;
       }
       try {
         const response = await bookService.getBookByID(this.book.masach);
-        if (response.data){
+        if (response.data) {
           this.errorBook = "Mã sách này đã tồn tại !"
         }
         else {
@@ -94,7 +108,7 @@ export default {
     },
     async addBook() {
       this.validateMaNXB(); // kiểm tra mã nxb
-      if (this.errorNXB) return; 
+      if (this.errorNXB) return;
 
       await this.validateMasach();
       if (this.errorBook) return
@@ -104,9 +118,9 @@ export default {
       this.errorNXB = "";
     },
   },
-  mounted() {
-    this.fetchNXB();
-  }
+  // mounted() {
+  //   this.fetchNXB();
+  // }
 };
 </script>
 
