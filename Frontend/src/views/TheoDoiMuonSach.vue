@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Navbar />
     <div class="main-content">
-      <Header @search="searchBorrowBook"/>
+      <Header @search="searchBorrowBook" />
       <div class="content">
         <div class="top-bar">
           <h2>Danh Sách Mượn Sách</h2>
@@ -58,8 +58,6 @@ export default {
     async fetchBorrowbooks() { // [GET]
       try {
         const borrowBooks = await borrowBookService.getAllBorrowBook()
-        console.log(borrowBooks)
-
         const response = await borrowBookService.getAllBorrowBook();
         this.borrowbooks = response.data;
       } catch (error) {
@@ -100,19 +98,29 @@ export default {
         });
 
         const dataBook = await bookService.getBookByID(borrowBook.masach);
-        console.log(dataBook.data.soquyen);
-        await bookService.updateBook(borrowBook.masach, {
-          maNXB: dataBook.data.maNXB,
-          soquyen: dataBook.data.soquyen + 1,
+        let newSoQuyen = dataBook.data.soquyen;
 
-        })
-        alert("Cập nhật thành công")
+        if (borrowBook.datra === true) {
+          newSoQuyen += 1;
+        }
+        else {
+          newSoQuyen -= 1;
+        }
+
+        if (newSoQuyen !== dataBook.data.soquyen) {
+          await bookService.updateBook(borrowBook.masach, {
+            maNXB: dataBook.data.maNXB,
+            soquyen: newSoQuyen,
+          });
+        }
+
+        alert("Cập nhật thành công!");
         this.fetchBorrowbooks();
-      }
-      catch (error) {
-        console.log(` Lỗi khi cập nhật ${error}`)
+      } catch (error) {
+        console.log(`Lỗi khi cập nhật: ${error}`);
       }
     },
+
 
     async searchBorrowBook(query) {
       try {
@@ -123,7 +131,7 @@ export default {
       }
     },
   },
-  
+
   mounted() {
     this.fetchBorrowbooks();
   }
