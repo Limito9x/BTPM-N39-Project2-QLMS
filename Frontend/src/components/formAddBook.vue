@@ -66,13 +66,12 @@ export default {
     validateMaNXB() {
       if (!this.book.maNXB) {
         this.errorNXB = "Bạn chưa nhập mã nhà xuất bản";
+        return
       }
-      else {
         if (!this.maNXBList.includes(this.book.maNXB)) {
           this.errorNXB = "Mã NXB không tồn tại !";
         } else {
           this.errorMessage = "";
-        }
       }
     },
     async validateMasach() {
