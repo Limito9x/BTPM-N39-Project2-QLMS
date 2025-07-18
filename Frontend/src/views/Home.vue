@@ -4,8 +4,43 @@
     <div class="main-content">
       <Header @search="searchBooksByReader" />
       <div class="content">
-        <div class="top-bar">
+        <div class="top-bar d-flex">
           <h2>Danh Sách Sách</h2>
+          <div style="position: relative;">
+            <button class="ml-4 d-flex filter-btn" @click="filterMenu = !filterMenu">
+              <h5>Bộ lọc tìm kiếm</h5>
+              <i class="fa-solid fa-filter ml-2 mt-1"></i>
+            </button>
+            <div v-if="filterMenu" class="filter-menu">
+              <ul>
+                <li @click="sortBooks('name')" :class="{
+                  active: atoz !== 'default'
+                }">
+                  Sắp xếp theo tên
+                  <span v-if="atoz === 'asc'">A → Z</span>
+                  <span v-else-if="atoz === 'desc'">Z → A</span>
+                  <span v-else>A → Z</span>
+                </li>
+
+                <li @click="sortBooks('price')" :class="{
+                  active: priceOrder !== 'default'
+                }">
+                  Sắp xếp theo giá
+                  <span v-if="priceOrder === 'asc'">tăng dần</span>
+                  <span v-else-if="priceOrder === 'desc'">giảm dần</span>
+                  <span v-else>tăng dần</span>
+                </li>
+                <li @click="sortBooks('year')" :class="{
+                  active: yearOrder !== 'default'
+                }">
+                  Sắp xếp theo năm xuất bản
+                  <span v-if="yearOrder === 'desc'">mới → cũ</span>
+                  <span v-else-if="yearOrder === 'asc'">cũ → mới</span>
+                  <span v-else>mới → cũ</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="book-list">
           <div class="book-card" v-for="book in books" :key="book.masach">
@@ -50,9 +85,15 @@ export default {
   data() {
     return {
       books: [],
+      orgBooks: [],
+      cloneBook: [],
       listNXB: {},
       selectedBook: null,
       showBorrowForm: false,
+      filterMenu: false,
+      atoz: "default",
+      priceOrder: "default",
+      yearOrder: "default",
     };
   },
   methods: {
@@ -72,13 +113,14 @@ export default {
       try {
         const response = await bookService.getAllBook();
         this.books = response.data;
+        this.cloneBooks = [...this.books];
+        this.orgBooks = [...this.books];
 
         await this.fetchNXB();
       } catch (error) {
         console.error("Lỗi khi lấy danh sách sách:", error);
       }
     },
-
 
     openBorrowForm(book) {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -95,15 +137,79 @@ export default {
       this.showBorrowForm = true;
     },
 
-    // tìm kiếm theo tên
+    // tìm kiếm theo tên 
+    // sửa lại theo tên sách hoặc tác giả
     async searchBooksByReader(query) {
       try {
-        const response = await bookService.getBookByName(query);
-        this.books = response.data;
+        const lowerQuery = query.trim().toLowerCase();
+        this.books = this.orgBooks.filter(book =>
+          book.tensach.toLowerCase().includes(lowerQuery) ||
+          (book.nguongoc_tacgia && book.nguongoc_tacgia.toLowerCase().includes(lowerQuery))
+        );
+        this.cloneBooks = [...this.books];
       } catch (error) {
         console.log(` lỗi khi tìm kiếm ${error}`)
       }
     },
+
+    checkDefaultOther(activeCategory) {
+      const sortMap = {
+        name: ["priceOrder", "yearOrder"],
+        price: ["atoz", "yearOrder"],
+        year: ["atoz", "priceOrder"]
+      };
+      if (sortMap[activeCategory]) {
+        sortMap[activeCategory].forEach(key => {
+          this[key] = "default";
+        });
+      }
+    },
+
+    sortBooks(category) {
+      this.checkDefaultOther(category);
+      if (category === "name") {
+        if (this.atoz === "default") {
+          this.atoz = "asc";
+          this.books.sort((a, b) => a.tensach.localeCompare(b.tensach));
+        }
+        else if (this.atoz === "asc") {
+          this.atoz = "desc";
+          this.books.sort((a, b) => b.tensach.localeCompare(a.tensach));
+        }
+        else {
+          this.atoz = "default";
+          this.books = [...this.cloneBooks];
+        };
+      }
+      if (category === "price") {
+        if (this.priceOrder === "default") {
+          this.priceOrder = "asc";
+          this.books.sort((a, b) => a.dongia.localeCompare(b.dongia));
+        }
+        else if (this.priceOrder === "asc") {
+          this.priceOrder = "desc";
+          this.books.sort((a, b) => b.dongia.localeCompare(a.dongia));
+        }
+        else {
+          this.priceOrder = "default";
+          this.books = [...this.cloneBooks];
+        };
+      }
+      if (category === "year") {
+        if (this.yearOrder === "default") {
+          this.yearOrder = "desc";
+          this.books.sort((a, b) => b.namsanxuat.localeCompare(a.namsanxuat));
+        }
+        else if (this.yearOrder === "desc") {
+          this.yearOrder = "asc";
+          this.books.sort((a, b) => a.namsanxuat.localeCompare(b.namsanxuat));
+        }
+        else {
+          this.yearOrder = "default";
+          this.books = [...this.cloneBooks];
+        };
+      }
+    }
   },
   mounted() {
     this.fetchBooks();
@@ -129,6 +235,21 @@ export default {
   margin-top: 70px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn {
+  background-color: #2992cf;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.filter-btn:hover {
+  background-color: #1772af;
 }
 
 .book-list {
@@ -234,5 +355,15 @@ p {
 
 .delete:hover {
   background-color: #c82333;
+}
+
+.filter-menu ul li:hover {
+  color: #007bff;
+}
+
+.active {
+  color: #007bff;
+  text-decoration: underline;
+  font-weight: bold;
 }
 </style>

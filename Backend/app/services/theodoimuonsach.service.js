@@ -39,8 +39,10 @@ class TheodoiMuonSachService {
   async create(payload) {
     const managementBook = await this.extractManagementBookData(payload);
     const sach = await this.sachService.findById(payload.masach);
-
-    const result = await this.managementBook.insertOne(managementBook);
+    
+    if(sach.soquyen===0) throw new Error("Số lượng sách đã hết, không thể mượn !");
+    
+      const result = await this.managementBook.insertOne(managementBook);
     await this.sachService.update(payload.masach, {
       soquyen: sach.soquyen - 1,
       maNXB: sach.maNXB,
