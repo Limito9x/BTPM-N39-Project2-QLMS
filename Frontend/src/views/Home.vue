@@ -8,8 +8,8 @@
           <h2>Danh Sách Sách</h2>
           <div style="position: relative;">
             <button class="ml-4 d-flex filter-btn" @click="filterMenu = !filterMenu">
-              <h5>Bộ lọc tìm kiếm</h5>
-              <i class="fa-solid fa-filter ml-2 mt-1"></i>
+              <h5>Sắp xếp tìm kiếm</h5>
+              <i class="fas fa-sort ml-2 mt-2"></i>
             </button>
             <div v-if="filterMenu" class="filter-menu">
               <ul>
@@ -139,13 +139,21 @@ export default {
 
     // tìm kiếm theo tên 
     // sửa lại theo tên sách hoặc tác giả
-    async searchBooksByReader(query) {
+    async searchBooksByReader(query,searchCategory) {
       try {
         const lowerQuery = query.trim().toLowerCase();
-        this.books = this.orgBooks.filter(book =>
-          book.tensach.toLowerCase().includes(lowerQuery) ||
-          (book.nguongoc_tacgia && book.nguongoc_tacgia.toLowerCase().includes(lowerQuery))
-        );
+        if (searchCategory === "nhaxuatban") {
+          // Trường hợp tìm theo tên nhà xuất bản
+          this.books = this.orgBooks.filter(book => {
+            const tenNXB = this.listNXB[book.maNXB]?.toLowerCase() || "";
+            return tenNXB.includes(lowerQuery);
+          });
+        } else {
+          // Trường hợp tìm trực tiếp từ thuộc tính trong book
+          this.books = this.orgBooks.filter(book =>
+            book[searchCategory]?.toLowerCase().includes(lowerQuery)
+          );
+        }
         this.cloneBooks = [...this.books];
       } catch (error) {
         console.log(` lỗi khi tìm kiếm ${error}`)
