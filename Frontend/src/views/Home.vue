@@ -155,11 +155,16 @@ export default {
           );
         }
         this.cloneBooks = [...this.books];
+        this.resetAll();
       } catch (error) {
         console.log(` lỗi khi tìm kiếm ${error}`)
       }
     },
-
+    resetAll() {
+      this.atoz = "default";
+      this.priceOrder = "default";
+      this.yearOrder = "default";
+    },
     checkDefaultOther(activeCategory) {
       const sortMap = {
         name: ["priceOrder", "yearOrder"],
