@@ -67,6 +67,8 @@ export default {
         this.$emit("close"); // Đóng form
       } catch (error) {
         console.error(` lỗi khi mượn sách ${error}`);
+        console.log(error.response)
+        alert(error.response.data.message);
       }
     }
   }
