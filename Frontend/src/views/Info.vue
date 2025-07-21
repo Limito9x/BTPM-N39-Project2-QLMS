@@ -8,26 +8,27 @@
           <h2>THÔNG TIN CÁ NHÂN</h2>
         </div>
         <div class="reader-card" v-if="reader">
-            <p><strong>Tên Đăng Nhập:</strong> {{ reader.madocgia }}</p>
-            <p><strong>Mật Khẩu:</strong> {{ reader.pass }}</p>
-            <p><strong>Họ Lót:</strong> {{ reader.holot }}</p>
-            <p><strong>Tên:</strong> {{ reader.ten }}</p>
-            <p><strong>Ngày Sinh:</strong> {{ reader.ngaysinh }}</p>
-            <p><strong>Giới Tính:</strong> {{ reader.phai }}</p>
-            <p><strong>Địa Chỉ:</strong> {{ reader.diachi }}</p>
-            <p><strong>Số Điện Thoại:</strong> {{ reader.dienthoai }}</p>
+          <p><strong>Tên Đăng Nhập:</strong> {{ reader.madocgia }}</p>
+          <p><strong>Mật Khẩu:</strong> {{ reader.pass }}</p>
+          <p><strong>Họ Lót:</strong> {{ reader.holot }}</p>
+          <p><strong>Tên:</strong> {{ reader.ten }}</p>
+          <p><strong>Ngày Sinh:</strong> {{ reader.ngaysinh }}</p>
+          <p><strong>Giới Tính:</strong> {{ reader.phai }}</p>
+          <p><strong>Địa Chỉ:</strong> {{ reader.diachi }}</p>
+          <p><strong>Số Điện Thoại:</strong> {{ reader.dienthoai }}</p>
 
-            <div class="actions">
+          <div class="actions">
             <button @click="deleteReader(reader.madocgia)" class="delete">Xóa tài khoản</button>
             <button @click="openEditForm(reader)" class="edit">Chỉnh sửa</button>
+            <button @click="openChangePass(reader)" class="changePass">Đổi Mật khẩu</button>
           </div>
         </div>
-        <formEditReader 
-          v-if="showEditForm"
-            :reader="selectedReader"
-            @editUser="editReader" 
-            @close="showEditForm = false" />
-        
+        <formEditReader v-if="showEditForm" :reader="selectedReader" @editUser="editReader"
+          @close="showEditForm = false" />
+
+        <formChangePassword v-if="showChangePassForm" :reader="selectedReader" @changePassword="editReader"
+          @close="showChangePassForm = false" />
+
       </div>
     </div>
   </div>
@@ -39,19 +40,22 @@ import Header from "@/components/header.vue";
 import readerService from "@/services/reader.service";
 import borrowBookService from "@/services/borrowBook.service";
 import formEditReader from "@/components/formEditReader.vue";
+import formChangePassword from "@/components/formChangePassword.vue";
 
 export default {
   components: {
     Navbar,
     Header,
-    formEditReader
+    formEditReader,
+    formChangePassword,
   },
   data() {
     return {
       reader: [],
       showForm: false,
       selectedReader: null,
-      showEditForm: false
+      showEditForm: false,
+      showChangePassForm: false
     };
   },
   methods: {
@@ -97,6 +101,12 @@ export default {
     openEditForm(reader) {
       this.selectedReader = { ...reader};  
       this.showEditForm = true;
+    },
+
+    openChangePass(reader){
+      this.selectedReader = {...reader};
+      this.showChangePassForm  = true;
+      console.log(reader)
     },
 
     async editReader(updateReader) {  
@@ -198,6 +208,15 @@ export default {
 
   .edit:hover {
     background-color: #1f618d;
+  }
+
+  .changePass {
+    background-color: #a0d643;
+    color: white;
+  }
+
+  .changePass:hover {
+    opacity: 0.8;
   }
 
   @media (max-width: 768px) {
