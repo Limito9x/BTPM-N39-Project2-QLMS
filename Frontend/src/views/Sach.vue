@@ -40,6 +40,7 @@ import Header from "@/components/header.vue";
 import FormAddBook from "@/components/formAddBook.vue";
 import FormEditBook from "@/components/formEditBook.vue";
 import bookService from "@/services/book.service";
+import nxbService from "@/services/nxb.service";
 
 export default {
   components: {
@@ -50,16 +51,16 @@ export default {
   },
   data() {
     return {
-      books: [], 
+      books: [],
       showForm: false,
       showEditForm: false,
       selectedBook: null,
     };
   },
   methods: {
-    async fetchBooks() { 
+    async fetchBooks() {
       try {
-        const response = await bookService.getAllBook(); 
+        const response = await bookService.getAllBook();
         this.books = response.data;
         const iscount = this.books.length;
         console.log(iscount);
@@ -67,8 +68,16 @@ export default {
         console.error("Lỗi khi lấy danh sách sách:", error);
       }
     },
+    // async fetchBooks() {
+    //   try {
+    //     const response = await nxbService.getAllNXB();
+    //     console.log(response.data);
+    //   } catch (error) {
+    //     console.error("Lỗi khi lấy danh sách nhà xuất bản:", error);
+    //   }
+    // },
     //tạo sách
-    async create(book) {  
+    async create(book) {
       try {
         book.soquyen = parseInt(book.soquyen); // chuyển sang kiểu số
         // kiểm tra sách có tồn tài chưa
@@ -83,7 +92,7 @@ export default {
     },
 
     // xóa sách
-    async deleteBook(id) { 
+    async deleteBook(id) {
       if (!confirm("Bạn có chắc chắn muốn xóa sách này?")) return;
       try {
         await bookService.deleteBook(id);
@@ -107,18 +116,18 @@ export default {
 
     // chỉnh sửa
     openEditForm(book) {
-      this.selectedBook = { ...book };  
+      this.selectedBook = { ...book };
       this.showEditForm = true;
     },
-    async editBook(updatedBook) {  
+    async editBook(updatedBook) {
       try {
-        await bookService.updateBook(updatedBook.masach,updatedBook);
+        await bookService.updateBook(updatedBook.masach, updatedBook);
         await this.fetchBooks();
         this.showEditForm = false;
         alert("Cập nhật sách thành công!");
         this.fetchBooks();
       } catch (error) {
-          console.error("Lỗi khi cập nhật sách:", error);
+        console.error("Lỗi khi cập nhật sách:", error);
       }
     }
   },
@@ -193,7 +202,7 @@ p {
 
 .quantity-box {
   display: inline-block;
-  background-color: #ff7e5f; 
+  background-color: #ff7e5f;
   color: white;
   font-weight: bold;
   padding: 5px 12px;
@@ -210,7 +219,7 @@ p {
 }
 
 .borrow {
-  background-color: #28a745; 
+  background-color: #28a745;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -221,11 +230,11 @@ p {
 }
 
 .borrow:hover {
-  background-color: #218838; 
+  background-color: #218838;
 }
 
 .edit {
-  background-color: #007bff; 
+  background-color: #007bff;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -236,11 +245,11 @@ p {
 }
 
 .edit:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
 
 .delete {
-  background-color: #dc3545; 
+  background-color: #dc3545;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -251,10 +260,10 @@ p {
 }
 
 .delete:hover {
-  background-color: #c82333; 
+  background-color: #c82333;
 }
 
-.add{
+.add {
   background-color: blue;
   color: white;
   border: none;

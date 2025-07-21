@@ -4,7 +4,7 @@ export default {};
 
 <template>
   <div>
-    <router-view /> <!-- Thêm dòng này để hiển thị nội dung từ Vue Router -->
+    <router-view />
   </div>
 </template>
 
