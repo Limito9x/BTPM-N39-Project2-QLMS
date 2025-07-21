@@ -198,6 +198,7 @@ export default {
   .icon-only {
     display: inline-block;
   }
+}
 .filter-wrapper {
   position: relative;
   display: inline-block;
