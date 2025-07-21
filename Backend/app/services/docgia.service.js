@@ -15,6 +15,7 @@ class ReaderService {
       phai: payload.phai,
       diachi: payload.diachi,
       dienthoai: payload.dienthoai,
+      email: payload.email,
       pass: payload.pass,
       tendangnhap: payload.tendangnhap,
     };
@@ -41,7 +42,7 @@ class ReaderService {
     return result;
   }
 
-  // tìm kiếm 
+  // tìm kiếm
   async find(filter) {
     const cursor = await this.Reader.find(filter);
     return await cursor.toArray();
@@ -65,7 +66,7 @@ class ReaderService {
 
   // tìm theo ID
   async findByIdUser(id) {
-    return await this.Reader.findOne({ madocgia: id })
+    return await this.Reader.findOne({ madocgia: id });
   }
 
   // cập nhật
@@ -82,7 +83,7 @@ class ReaderService {
     return res;
   }
 
-  // xóa một 
+  // xóa một
   async delete(id) {
     const result = await this.Reader.findOneAndDelete({
       madocgia: id,

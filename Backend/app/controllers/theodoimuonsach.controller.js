@@ -10,7 +10,10 @@ exports.create = async (req, res, next) => {
     const doc = await theodoimuonsachService.create(req.body);
     return res.send(doc);
   } catch (error) {
-    return next(new ApiError(500, `Lỗi khi tạo thẻ mượn sách  ${error}`));
+    if(error) {
+      return next(new ApiError(400,error.message));
+    }
+    else return next(new ApiError(500, `Lỗi khi tạo thẻ mượn sách  ${error}`));
   }
 };
 
@@ -25,6 +28,7 @@ exports.findAll = async (req, res, next) => {
 
     return res.send(docs);
   } catch (error) {
+    console.log(error);
     return next(
       new ApiError(500, `Lỗi khi lấy danh sách các thẻ mượn sách ${error}`)
     );
