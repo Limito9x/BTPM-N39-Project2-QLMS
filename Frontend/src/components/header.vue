@@ -42,9 +42,6 @@
   </header>
 </template>
 
-
-
-
 <script>
 export default {
   data() {
@@ -103,7 +100,6 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-wrap: nowrap;
   height: 75px;
-  overflow-x: auto;
 }
 
 .title {
@@ -212,7 +208,7 @@ export default {
   padding: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  z-index: 999;
+  z-index: 1000;
   color: black;
   min-width: 270px;
   display: flex;
