@@ -3,7 +3,7 @@
     <div class="login-box">
       <div class="tabs">
         <!-- mặc định là login -->
-        <span :class="{ active: isLogin }" @click="isLogin = true">Login</span> 
+        <span :class="{ active: isLogin }" @click="isLogin = true">Login</span>
         <span :class="{ active: !isLogin }" @click="isLogin = false">Sign Up</span>
       </div>
 
@@ -29,6 +29,7 @@
         </select>
         <input v-model="registerData.diachi" placeholder="Địa chỉ" />
         <input v-model="registerData.dienthoai" placeholder="Số điện thoại" required />
+        <input v-model="registerData.email" placeholder="Email" required />
         <input v-model="registerData.pass" type="password" placeholder="Mật khẩu" required />
         <input v-model="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required />
         <button type="submit">Đăng ký</button>
@@ -56,6 +57,7 @@ export default {
         phai: "gt",
         diachi: "",
         dienthoai: "",
+        email: "",
         pass: "",
         madocgia: "",
       },
