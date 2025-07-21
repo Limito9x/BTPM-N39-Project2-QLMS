@@ -1,28 +1,34 @@
 <template>
-  <div class="form-overlay"> 
+  <div class="form-overlay">
     <div class="form-container">
       <h3>Cập Nhật Sách</h3>
       <label for="masach">Mã sách</label>
-      <input id="masach" v-model="editedBook.masach" disabled/>  
+      <input id="masach" v-model="editedBook.masach" disabled />
 
       <label for="tensach">Tên sách</label>
-      <input id="tensach" v-model="editedBook.tensach"/>
+      <input id="tensach" v-model="editedBook.tensach" />
 
       <label for="dongia">Đơn giá</label>
-      <input id="dongia" v-model="editedBook.dongia"/>
-      
+      <input id="dongia" v-model="editedBook.dongia" />
+
       <label for="soquyen">Số quyểnn</label>
-      <input id="soquyen" v-model="editedBook.soquyen"/>
+      <input id="soquyen" v-model="editedBook.soquyen" />
 
       <label for="namsanxuat">Năm sản xuất</label>
-      <input id="namsanxuat" v-model="editedBook.namsanxuat" type="date"/>
+      <input id="namsanxuat" v-model="editedBook.namsanxuat" type="date" />
+      <label for="maNXB">Nhà Xuất Bản</label>
+      <label for="maNXB">Nhà Xuất Bản</label>
+      <select v-model="editedBook.maNXB" id="maNXB">
+        <option disabled value="">-- Chọn nhà xuất bản --</option>
+        <option v-for="nxb in publishers" :key="nxb.maNXB" :value="nxb.maNXB">
+          {{ nxb.tennxb }}
+        </option>
+      </select>
 
-      <label for="maMXB">Mã nhà xuất bản</label>
-      <input id="maMXB" v-model="editedBook.maNXB" @input="validateMaNXB"/>
       <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
 
       <label for="nguongoc">Nguồn gốc/Tác giả</label>
-      <input id="nguongoc" v-model="editedBook.nguongoc_tacgia"/>
+      <input id="nguongoc" v-model="editedBook.nguongoc_tacgia" />
 
       <button @click="submitForm" class="submit">Lưu</button>
       <button @click="$emit('close')" class="cancel">Hủy</button>
@@ -34,60 +40,59 @@
 import nxbService from "@/services/nxb.service";
 
 export default {
-    props: ["book"], // lấy dữ liệu từ view/sach
-    data() {
-        return {
-            editedBook: {...this.book}, // k để ảnh hưởng đến cha
-            maNXBList: [], 
-            errorMessage: "", 
-        };
+  props: ["book"], // lấy dữ liệu từ view/sach
+  data() {
+    return {
+      editedBook: { ...this.book }, // k để ảnh hưởng đến cha
+      publishers: [],
+      errorMessage: "",
+    };
   },
   methods: {
     async fetchNXB() {
       try {
         const response = await nxbService.getAllNXB(); //[GET]
-        this.maNXBList = response.data.map(nxb => nxb.maNXB); // danh sách mã NXB
+        this.publishers = response.data;
 
       } catch (error) {
         console.error("Lỗi khi lấy danh sách NXB:", error);
       }
     },
-    validateMaNXB() {
-      if (!this.editedBook.maNXB) {
-        this.errorMessage = "Bạn chưa nhập mã nhà xuất bản";
-        return;
-      } 
-      else {
-        if (!this.maNXBList.includes(this.editedBook.maNXB)) {
-          this.errorMessage = "Mã NXB không tồn tại trong hệ thống!";
-        } else {
-          this.errorMessage = "";
-        }
-      }
-    },
+    // validateMaNXB() {
+    //   if (!this.editedBook.maNXB) {
+    //     this.errorMessage = "Bạn chưa nhập mã nhà xuất bản";
+    //     return;
+    //   } 
+    //   else {
+    //     if (!this.maNXBList.includes(this.editedBook.maNXB)) {
+    //       this.errorMessage = "Mã NXB không tồn tại trong hệ thống!";
+    //     } else {
+    //       this.errorMessage = "";
+    //     }
+    //   }
+    // },
     submitForm() {
-      this.validateMaNXB(); 
-      if (this.errorMessage) return; 
+      // this.validateMaNXB(); 
+      // if (this.errorMessage) return; 
 
       this.$emit("edit-book", this.editedBook);
       // this.editedBook = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
       this.errorMessage = "";
     },
   },
-    watch: {
-        book(newBook) {
-          this.editedBook = { ...newBook }; 
-        }
-    },
-    mounted() {
-      this.fetchNXB(); 
+  watch: {
+    book(newBook) {
+      this.editedBook = { ...newBook };
     }
+  },
+  mounted() {
+    this.fetchNXB();
+  }
 };
 </script>
 
 
 <style scoped>
-
 .form-overlay {
   position: fixed;
   top: 0;
@@ -116,7 +121,8 @@ label {
   margin: 10px 0px 0px 0px;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   margin: 2px 0 0 0;
   padding: 8px;
@@ -138,7 +144,7 @@ button {
 }
 
 .submit {
-background-color: green;
+  background-color: green;
   color: white;
 }
 </style>

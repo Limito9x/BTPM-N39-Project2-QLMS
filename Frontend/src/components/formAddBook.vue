@@ -2,10 +2,10 @@
   <div class="form-overlay">
     <div class="form-container">
       <h3>Thêm Sách</h3>
+
       <label for="masach">Mã sách</label>
       <input id="masach" v-model="book.masach" @blur="validateMasach" />
       <p v-if="errorBook" style="color: red;">{{ errorBook }}</p>
-
 
       <label for="tensach">Tên sách</label>
       <input id="tensach" v-model="book.tensach" />
@@ -19,8 +19,14 @@
       <label for="namsanxuat">Năm sản xuất</label>
       <input id="namsanxuat" v-model="book.namsanxuat" type="date" />
 
-      <label for="maMXB">Mã nhà xuất bản</label>
-      <input id="maMXB" v-model="book.maNXB" @blur="validateMaNXB" />
+      <label for="maNXB">Nhà Xuất Bản</label>
+      <select v-model="book.maNXB" id="maNXB" @change="onNXBChange">
+        <option disabled value="">-- Chọn nhà xuất bản --</option>
+        <option v-for="nxb in publishers" :key="nxb.maNXB" :value="nxb.maNXB">
+          {{ nxb.tennxb }}
+        </option>
+      </select>
+
       <p v-if="errorNXB" style="color: red;">{{ errorNXB }}</p>
 
       <label for="nguongoc">Nguồn gốc/Tác giả</label>
@@ -35,7 +41,6 @@
 <script>
 import bookService from "@/services/book.service";
 import nxbService from "@/services/nxb.service";
-import { error } from "jquery";
 
 export default {
   data() {
@@ -49,84 +54,81 @@ export default {
         maNXB: "",
         nguongoc_tacgia: "",
       },
-      maNXBList: [], // Lưu danh sách mã nhà xuất bản từ DB
-      errorNXB: "", // Lưu lỗi nếu nhập sai mã NXB
+      publishers: [],
+      // errorNXB: "",
       errorBook: "",
     };
   },
   methods: {
-    // async fetchNXB() {
-    //   try {
-    //     const response = await nxbService.getAllNXB(); // API lấy danh sách NXB
-    //     this.maNXBList = response.data.map(nxb => nxb.maNXB); // Lấy danh sách mã NXB
-    //   } catch (error) {
-    //     console.error("Lỗi khi lấy danh sách NXB:", error);
-    //   }
-    // },
     // validateMaNXB() {
     //   if (!this.book.maNXB) {
-    //     this.errorNXB = "Bạn chưa nhập mã nhà xuất bản";
-    //     return
+    //     this.errorNXB = "Bạn chưa chọn nhà xuất bản";
+    //     return false;
     //   }
-    //     if (!this.maNXBList.includes(this.book.maNXB)) {
-    //       this.errorNXB = "Mã NXB không tồn tại !";
-    //     } else {
-    //       this.errorMessage = "";
+    //   const found = this.publishers.find(nxb => nxb.manxb === this.book.maNXB);
+    //   if (!found) {
+    //     this.errorNXB = "Mã nhà xuất bản không tồn tại";
+    //     return false;
     //   }
+    //   this.errorNXB = "";
+    //   return true;
     // },
-    async validateMaNXB() {
-      if (!this.book.maNXB) {
-        this.errorNXB = "Bạn chưa nhập mã nhà xuất bản"
-        return;
-      }
-      try {
-        const response = await nxbService.getNXBbyID(this.book.maNXB)
-        if (response.data) {
-          this.errorNXB = ""
-        }
-      } catch (error) {
-        this.errorNXB = "Mã nhà xuất bản không tồn tại"
-      }
-    },
     async validateMasach() {
       if (!this.book.masach) {
-        this.errorBook = "Bạn chưa nhập mã sách"
+        this.errorBook = "Bạn chưa nhập mã sách";
         return;
       }
       try {
-        const response = await bookService.getBookByID(this.book.masach);
+        const response = await bookService.getBookByID(this.book.masach); // Sửa cú pháp
         if (response.data) {
-          this.errorBook = "Mã sách này đã tồn tại !"
+          this.errorBook = "Mã sách này đã tồn tại!";
+        } else {
+          this.errorBook = "";
         }
-        else {
-          this.errorBook = ""
-        }
-      }
-      catch (error) {
-        this.errorBook = "";
+      } catch (error) {
+        this.errorBook = ""; // Mã chưa tồn tại => hợp lệ
       }
     },
     async addBook() {
-      this.validateMaNXB(); // kiểm tra mã nxb
-      if (this.errorNXB) return;
+      // const validNXB = this.validateMaNXB();
+      // if (!validNXB) return;
 
       await this.validateMasach();
-      if (this.errorBook) return
+      if (this.errorBook) return;
+
+      console.log("Dữ liệu thêm:", this.book); // Gợi ý: log kiểm tra
 
       this.$emit("add-book", this.book);
-      // this.book = { masach: "", tensach: "", dongia: "", soquyen: "", namsanxuat: "", maNXB: "", nguongoc_tacgia: "" };
-      this.errorNXB = "";
+
+      // Reset form
+      this.book = {
+        masach: "",
+        tensach: "",
+        dongia: "",
+        soquyen: "",
+        namsanxuat: "",
+        maNXB: "",
+        nguongoc_tacgia: "",
+      };
+      // this.errorNXB = "";
+      this.errorBook = "";
     },
   },
-  // mounted() {
-  //   this.fetchNXB();
-  // }
+  async mounted() {
+    try {
+      const response = await nxbService.getAllNXB();
+      this.publishers = response.data;
+    } catch (error) {
+      console.error("Lỗi lấy danh sách NXB:", error);
+    }
+  },
 };
 </script>
 
 
 <style scoped>
 .form-overlay {
+  padding-top: 70px;
   position: fixed;
   top: 0;
   left: 0;
@@ -140,11 +142,12 @@ export default {
 
 .form-container {
   background: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 400px;
   text-align: center;
+  
 }
 
 label {
