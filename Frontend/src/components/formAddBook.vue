@@ -55,19 +55,24 @@ export default {
         nguongoc_tacgia: "",
       },
       publishers: [],
-      errorNXB: "",
+      // errorNXB: "",
       errorBook: "",
     };
   },
   methods: {
-    validateMaNXB() {
-      if (!this.book.maNXB) {
-        this.errorNXB = "Bạn chưa chọn nhà xuất bản";
-        return false;
-      }
-      this.errorNXB = "";
-      return true;
-    },
+    // validateMaNXB() {
+    //   if (!this.book.maNXB) {
+    //     this.errorNXB = "Bạn chưa chọn nhà xuất bản";
+    //     return false;
+    //   }
+    //   const found = this.publishers.find(nxb => nxb.manxb === this.book.maNXB);
+    //   if (!found) {
+    //     this.errorNXB = "Mã nhà xuất bản không tồn tại";
+    //     return false;
+    //   }
+    //   this.errorNXB = "";
+    //   return true;
+    // },
     async validateMasach() {
       if (!this.book.masach) {
         this.errorBook = "Bạn chưa nhập mã sách";
@@ -85,8 +90,8 @@ export default {
       }
     },
     async addBook() {
-      const validNXB = this.validateMaNXB();
-      if (!validNXB) return;
+      // const validNXB = this.validateMaNXB();
+      // if (!validNXB) return;
 
       await this.validateMasach();
       if (this.errorBook) return;
@@ -105,7 +110,7 @@ export default {
         maNXB: "",
         nguongoc_tacgia: "",
       };
-      this.errorNXB = "";
+      // this.errorNXB = "";
       this.errorBook = "";
     },
   },
@@ -142,7 +147,7 @@ export default {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 400px;
   text-align: center;
-
+  
 }
 
 label {
